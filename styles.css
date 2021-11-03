@@ -369,7 +369,8 @@ iframe {
   .adress {
     font-size: 3vw;
   }
-  @media only screen and (max-width: 755px) {
+
+@media all and (max-width: 320px) and (min-height: 340px){
   .bitcoindiv{
     flex-direction: column;
     padding: 20px;
@@ -378,6 +379,5 @@ iframe {
     width: 100%;
   }
 }
-
 }
 
