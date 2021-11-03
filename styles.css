@@ -355,6 +355,9 @@ iframe {
   .cryptodiv {
     margin: 0;
   }
+  .loginpopdiv {
+    width: 80%;
+  }
   header div a {
     margin-left: 1%;
     margin-right: 1%;
