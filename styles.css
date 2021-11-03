@@ -59,20 +59,14 @@ header div {
   color: rgb(253, 253, 253);
 }
 
-.loginpop {
-  display: none;
-  position: fixed;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
+
 
 .loginpopdiv {
+  display: none;
+  position: fixed;
+  left: 25%;
+  top: 25%;
   color: rgb(253, 253, 253);
-  display: flex;
   align-content: center;
   border-radius: 20px;
   align-self: center;
@@ -111,8 +105,12 @@ header div {
 
 .orange.underlineuser {
     background: orange;
+    width: 87%;
 }
 
+.indexmain {
+  height: 700px;
+}
 
 input {
   margin-left: 20px;
@@ -217,6 +215,7 @@ iframe {
   overflow: scroll;
   width: 100%;
   max-height: 670px;
+  box-shadow: 1px 1px 3px 1px rgba(110, 110, 110, 0.226);
   animation: sideslidel 0.6s linear;
 }
 
@@ -274,6 +273,7 @@ iframe {
   overflow: scroll;
   max-height: 640px;
   animation: sideslide 0.6s linear;
+  box-shadow: 1px 1px 3px 1px rgba(211, 211, 211, 0.226);
 }
 
 .shake {
@@ -337,8 +337,9 @@ iframe {
   margin-left: 40px;
   margin-right: 40px;
   border: solid white 1px;
-  border-radius: 5px;
+  border-radius: 20px;
   padding: 10px;
+  width: 80%;
 }
 
 @media only screen and (max-width: 825px) {
