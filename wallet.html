@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-search-pseudo-elements></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="bodyimg">
+    <header>
+        <img src="Untitled design-2.png" alt="img" style="border-radius: 20px; width: 30px;">
+        <div>
+            <a class="active">wallet</a>
+            <a href="hngwm.html">support</a>
+            <a href="prices.html">values</a>
+        </div>
+        <button class="loginnav" onclick="logout()">log out</button>
+    </header>
+    <div class="loginpop">
+        <div class="loginpopdiv">
+            <div class="loginclosebtndiv">
+                <button class="loginclosebtn" onclick="loginremove()">x</button>
+            </div>
+            <h3 class="loginlabel">login:</h3>
+            <input class="userinput" placeholder="username" type="text">
+            <div id="" class="underlineuser"></div>
+            <input class="pass" placeholder="password" type="password">
+            <div id="" class="underlinepass"></div>
+            <div class="loginbtndiv">
+                <button class="signupbtn" onclick="login()">sign up</button>
+                <button class="loginbtn"></button>
+            </div>
+        </div>
+    </div>
+
+    <main class="walletmain">
+        <div class="wallet">
+            <h1>Portfolio:</h1>
+            <h3>Bitcoin Address:</h3>
+            <p class="adress">1QB3BjCc9qKPkwyh5L5Gi6shNDwPUySR71</p>
+            <h3>Monero Address:</h3>
+            <p class="adress" style="color: goldenrod;">84iyJF7Bxdr2BtuCfhMd9LhqMNSfQSoHF3RycoDVahzRZr6fNziBLYXe2uBETrL7ewFyezTiC9j9DiwRcBy91a9e2qPUsM9</p>
+            <h3>Ethereum Address:</h3>
+            <p class="adress" style="color: greenyellow;">0x35120c9635d9F7FB664522b3ECF7E63D3a0555e5</p>
+            <h3>Ethereum Address:</h3>
+            <p class="adress">D7t9MvAWHd1dVCromAdacDyeHuAosFNsfr</p>
+            <h3>Ethereum Address:</h3>
+            <p class="adress" style="color: whitesmoke;">LaUEazQ2LtyPa6hehTcfhuZyL33FFxMfi6</p>
+        </div>
+        <div class="cryptodiv">
+                <div class="bitcoindiv">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png" style="width: 60px;" alt="">
+                <h1 onclick="animateValue()" id="btcprice"></h1> 
+                    <div class="divinfo">
+                        
+                        <button>deposit</button>
+                        <button>withdraw</button>
+                    </div>
+                </div> 
+        </div>
+
+
+    </main>
+    <script>
+        var logincheck = localStorage.getItem('login')
+        var check = localStorage.getItem('check');
+            if (check == "true"){
+
+            }
+            else {
+                window.location.href = "index.html";
+            }
+            if (logincheck == "true"){
+                
+            }
+function logout(){
+    localStorage.setItem('check', false);
+    window.location.href = "index.html";
+};
+
+
+let priceint = 0;
+
+window.addEventListener('load', Numstart());
+
+function Numstart(){
+    if (priceint <= 2345435){
+    $('#btcprice').html(priceint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    setTimeout(valchange, 0);
+    }
+}
+
+function valchange(){
+    priceint = priceint + 9456;
+    Numstart();
+};
+
+
+
+//var xmlhttp = new XMLHttpRequest();
+var url = "https://api.coindesk.com/v1/bpi/currentprice.json";
+		
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4  &&  this.status == 200) {
+    var json = JSON.parse(this.responseText);
+    parseJson(json);
+  }		
+};
+
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function parseJson(json) {
+  var usdValue = json["bpi"]["USD"]["rate"];
+  var coins = 4;
+  var total = parseInt(usdValue);
+  document.getElementById("btcprice").innerHTML = total;
+}
+
+
+    </script>
+</body>
+<script></script>
+</html>

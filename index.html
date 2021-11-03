@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-search-pseudo-elements></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="bodyimg">
+    <header>
+        <img src="Untitled design-2.png" alt="img" style="border-radius: 20px; width: 30px;">
+        <div>
+            <a onclick="login()">withdraw</a>
+            <a onclick="login()">wallet</a>
+            <a onclick="login()">support</a>
+        </div>
+        <button class="loginnav" onclick="login()">login</button>
+    </header>
+    <div class="loginpop">
+        <div class="loginpopdiv">
+            <div class="loginclosebtndiv">
+                <button class="loginclosebtn" onclick="loginremove()">x</button>
+            </div>
+            <h3 class="loginlabel">Login first:</h3>
+            <input class="userinput" placeholder="username" type="text">
+            <div id="" class="underlineuser"></div>
+            <input class="pass" placeholder="password" type="password">
+            <div id="" class="underlinepass"></div>
+            <div class="loginbtndiv">
+                <button class="signupbtn" onclick="login()">sign up</button>
+                <button class="loginbtn">login</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+
+    </main>
+    <script>
+        const userval = ["h", "andersonhick@gmail.com", "bloomycass@hotmail.com", "schrudge.anderson@yahoo.com"];
+        const passval = ["h","hquTRml2@%ia", "#se4AxOl!sqT", "book", "hot", "milf"];
+        const mail = "@gmail.com";
+        var attempts = 5
+        var ban = localStorage.getItem('ban');
+        if (ban == "true"){
+            window.location.href = "fuckyou.html";
+        }
+        function login() {
+            var check = localStorage.getItem("check");
+            if (check == "true"){
+                localStorage.setItem("login", "true")
+                window.location.href = "wallet.html";
+            }
+            else {
+                $(".loginpop").css("display", "flex");
+                $(".loginpop").css("opacity", "0");
+                $(".loginpopdiv").css("transform", "translateY(-21px)");
+                setTimeout(login1, 1)   
+            }
+            
+        };
+
+        function login1() {
+            $(".loginpop").css("opacity", "1");
+            $(".loginpopdiv").css("transform", "translateY(0px)");
+        };
+
+        function loginremove() {
+            $(".loginpop").css("opacity", "0");
+            $(".loginpopdiv").css("transform", "translateY(21px)");
+            setTimeout(loginremove1, 410)
+        };
+
+        function loginremove1() {
+            $(".loginpop").css("display", "none");
+        };
+        $(".userinput").keyup(function () {
+            var email = $(".userinput").val();
+            if (!email.includes(mail)) {
+                $(".underlineuser").addClass("orange");
+            }
+            else {
+                $(".underlineuser").removeClass("orange");
+            }
+
+        });
+
+        $(".userinput").click(function () {
+            $(".underlinepass").removeClass("red");
+            $(".underlineuser").removeClass("red");
+        });
+        $(".loginbtn").on("click", function (event) {
+            event.preventDefault();
+            var input = $(".userinput").val();
+            var pass = $(".pass").val();
+
+            if (userval.includes(input) && (passval.includes(pass))) {
+                console.log("login succeful");
+                localStorage.setItem('check', "true");
+                window.location.href = "wallet.html";
+                localStorage.setItem('ban', "false")
+            } else {
+                console.log("fuck you");
+                
+                $(".underlinepass").addClass("red");
+                $(".underlineuser").addClass("red");
+                $(".underlinepass").addClass("shake");
+                $(".underlineuser").addClass("shake");
+                $(".loginlabel").addClass("shake");
+                setTimeout(removeshake, 300);
+                attempts = attempts - 1;
+                if(attempts < 0){
+                    localStorage.setItem('ban', "true")
+                    window.location.href = "fuckyou.html";
+                }
+                else {
+                   $(".loginlabel").html("Incorrect: " + attempts)
+                $(".loginlabel").addClass("red"); 
+                }
+            }
+        });
+        function removeshake(){
+            $(".underlinepass").removeClass("shake");
+                $(".underlineuser").removeClass("shake");
+                $(".loginlabel").removeClass("shake"); 
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</body>
+
+</html>
