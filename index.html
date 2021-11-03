@@ -21,7 +21,6 @@
         </div>
         <button class="loginnav" onclick="login()">login</button>
     </header>
-    <div class="loginpop">
         <div class="loginpopdiv">
             <div class="loginclosebtndiv">
                 <button class="loginclosebtn" onclick="loginremove()">x</button>
@@ -35,10 +34,9 @@
                 <button class="signupbtn" onclick="login()">sign up</button>
                 <button class="loginbtn">login</button>
             </div>
-        </div>
     </div>
 
-    <main>
+    <main onclick="loginremove()" class="indexmain">
 
     </main>
     <script>
@@ -57,8 +55,8 @@
                 window.location.href = "wallet.html";
             }
             else {
-                $(".loginpop").css("display", "flex");
-                $(".loginpop").css("opacity", "0");
+                $(".loginpopdiv").css("display", "flex");
+                $(".loginpopdiv").css("opacity", "0");
                 $(".loginpopdiv").css("transform", "translateY(-21px)");
                 setTimeout(login1, 1)   
             }
@@ -66,18 +64,18 @@
         };
 
         function login1() {
-            $(".loginpop").css("opacity", "1");
+            $(".loginpopdiv").css("opacity", "1");
             $(".loginpopdiv").css("transform", "translateY(0px)");
         };
 
         function loginremove() {
-            $(".loginpop").css("opacity", "0");
+            $(".loginpopdiv").css("opacity", "0");
             $(".loginpopdiv").css("transform", "translateY(21px)");
             setTimeout(loginremove1, 410)
         };
 
         function loginremove1() {
-            $(".loginpop").css("display", "none");
+            $(".loginpopdiv").css("display", "none");
         };
         $(".userinput").keyup(function () {
             var email = $(".userinput").val();
@@ -103,6 +101,7 @@
                 console.log("login succeful");
                 localStorage.setItem('check', "true");
                 window.location.href = "wallet.html";
+                loginremove();
                 localStorage.setItem('ban', "false")
             } else {
                 console.log("fuck you");
@@ -114,7 +113,7 @@
                 $(".loginlabel").addClass("shake");
                 setTimeout(removeshake, 300);
                 attempts = attempts - 1;
-                if(attempts < 0){
+                if(attempts < 1){
                     localStorage.setItem('ban', "true")
                     window.location.href = "fuckyou.html";
                 }

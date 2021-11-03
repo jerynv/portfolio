@@ -21,23 +21,6 @@
         </div>
         <button class="loginnav" onclick="logout()">log out</button>
     </header>
-    <div class="loginpop">
-        <div class="loginpopdiv">
-            <div class="loginclosebtndiv">
-                <button class="loginclosebtn" onclick="loginremove()">x</button>
-            </div>
-            <h3 class="loginlabel">login:</h3>
-            <input class="userinput" placeholder="username" type="text">
-            <div id="" class="underlineuser"></div>
-            <input class="pass" placeholder="password" type="password">
-            <div id="" class="underlinepass"></div>
-            <div class="loginbtndiv">
-                <button class="signupbtn" onclick="login()">sign up</button>
-                <button class="loginbtn"></button>
-            </div>
-        </div>
-    </div>
-
     <main class="walletmain">
         <div class="wallet">
             <h1>Portfolio:</h1>
@@ -50,7 +33,7 @@
             <h3>Ethereum Address:</h3>
             <p class="adress">D7t9MvAWHd1dVCromAdacDyeHuAosFNsfr</p>
             <h3>Ethereum Address:</h3>
-            <p class="adress" style="color: whitesmoke;">LaUEazQ2LtyPa6hehTcfhuZyL33FFxMfi6</p>
+            <p class="adress" style="color: rgb(187, 187, 187);">LaUEazQ2LtyPa6hehTcfhuZyL33FFxMfi6</p>
         </div>
         <div class="cryptodiv">
                 <div class="bitcoindiv">
@@ -78,6 +61,7 @@
             if (logincheck == "true"){
                 
             }
+
 function logout(){
     localStorage.setItem('check', false);
     window.location.href = "index.html";
@@ -89,8 +73,8 @@ let priceint = 0;
 window.addEventListener('load', Numstart());
 
 function Numstart(){
-    if (priceint <= 2345435){
-    $('#btcprice').html(priceint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    if (priceint <= 3454435){
+    $('#btcprice').html("$"+priceint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     setTimeout(valchange, 0);
     }
 }
