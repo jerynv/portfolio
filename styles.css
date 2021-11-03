@@ -1,0 +1,371 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap");
+
+* {
+  text-decoration: none;
+  font-family: "Roboto Slab", serif;
+  transition: ease-in-out 0.2s;
+}
+
+body {
+  background: rgb(65, 63, 63);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgb(85, 85, 84);
+  padding: 4px;
+  border-radius: 20px;
+  box-shadow: 1px 1px 3px 1px rgba(211, 211, 211, 0.226);
+  animation: topslide 0.7s linear;
+}
+
+header div a {
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 20px;
+  margin-left: 5%;
+  margin-right: 5%;
+  color: rgb(253, 253, 253);
+}
+
+header div a:hover {
+  background: rgba(170, 170, 170, 0.548);
+}
+
+.loginnav {
+  padding: 0px;
+}
+
+.loginnav:hover {
+  background: rgba(170, 170, 170, 0.548);
+}
+
+header div {
+  margin-left: 3.5%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loginnav {
+  width: 100px;
+  height: 30px;
+  border-radius: 20px;
+  border: 2px solid rgb(253, 253, 253);
+  background: none;
+  color: rgb(253, 253, 253);
+}
+
+.loginpop {
+  display: none;
+  position: fixed;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loginpopdiv {
+  color: rgb(253, 253, 253);
+  display: flex;
+  align-content: center;
+  border-radius: 20px;
+  align-self: center;
+  flex-direction: column;
+  width: 50%;
+  background: rgb(85, 85, 84);
+  box-shadow: 1px 1px 3px 0.1px rgba(211, 211, 211, 0.226);
+}
+
+.loginclosebtndiv {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.loginclosebtn {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: rgb(253, 253, 253);
+  margin: 10px;
+  border-radius: 20px;
+  height: 25px;
+  width: 25px;
+  background: rgb(253, 253, 253);
+  border: solid 0px;
+  overflow: visible;
+  background: none;
+}
+
+.loginclosebtn:hover {
+  border: solid 2px;
+}
+
+.orange.underlineuser {
+    background: orange;
+}
+
+
+input {
+  margin-left: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  margin-bottom: none;
+  color: rgb(253, 253, 253);
+}
+
+input:focus {
+  outline: none !important;
+}
+
+.userinput:focus + .underlineuser {
+  width: 87%;
+}
+
+.pass:focus + .underlinepass {
+  width: 87%;
+}
+
+.underlineuser,
+.underlinepass {
+  margin-left: 20px;
+  margin-right: 20px;
+  height: 2px;
+  width: 0px;
+  background: rgb(253, 253, 253);
+  margin-bottom: 3%;
+  border-radius: 2100px;
+}
+
+.red.underlineuser {
+  width: 87%;
+  background: red;
+}
+
+.red.underlinepass {
+  width: 87%;
+  background: red;
+}
+
+.loginlabel {
+  margin-left: 20px;
+}
+
+.loginbtndiv {
+  position: relative;
+  margin-top: 10%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.signupbtn {
+  color: rgb(253, 253, 253);
+  margin: 10px;
+  width: 40%;
+  height: 40px;
+  border-radius: 20px;
+  border: solid 2px rgb(253, 253, 253);
+  background: none;
+  font-size: 15px;
+}
+
+.loginbtn {
+  color: rgb(253, 253, 253);
+  width: 60%;
+  margin: 10px;
+  height: 40px;
+  border-radius: 20px;
+  border: solid 2px rgb(253, 253, 253);
+  background: none;
+  font-size: 15px;
+}
+
+.loginbtn:hover,
+.active {
+  background: rgba(170, 170, 170, 0.548);
+}
+
+.signupbtn:hover {
+  background: rgba(170, 170, 170, 0.548);
+}
+
+iframe {
+  position: relative;
+  z-index: -3px;
+  border-radius: 20px;
+  box-shadow: 1px 1px 10px 0.1px rgba(211, 211, 211, 0.226);
+}
+
+.red {
+  color: red;
+}
+
+.cryptodiv {
+  background: rgb(56, 54, 54);
+  margin: 10px;
+  border-radius: 20px;
+  overflow: scroll;
+  width: 100%;
+  max-height: 670px;
+  animation: sideslidel 0.6s linear;
+}
+
+.bitcoindiv {
+  background: rgb(85, 85, 84);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 20px;
+  margin: 10px;
+  padding-left: 10px;
+  color: whitesmoke;
+  box-shadow: 1px 1px 3px 0.1px rgba(211, 211, 211, 0.226);
+}
+
+.divinfo {
+  width: 50%;
+  color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-right: 10px;
+}
+
+.divinfo button {
+  padding: 10px;
+  font-size: 15px;
+  color: whitesmoke;
+  width: 45%;
+  height: 50px;
+  background: none;
+  border: 2px solid;
+  border-radius: 20px;
+}
+
+.divinfo button:hover {
+  background: rgba(170, 170, 170, 0.548);
+}
+
+.walletmain {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+
+.wallet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgb(85, 85, 84);
+  width: 40%;
+  margin: 10px;
+  border-radius: 20px;
+  color: whitesmoke;
+  overflow: scroll;
+  max-height: 640px;
+  animation: sideslide 0.6s linear;
+}
+
+.shake {
+    animation: shake .1s linear infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(2px, 1px) rotate(0deg); } 
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(2px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(2px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@keyframes topslide {
+  0% {
+    opacity: 0;
+    transform: translateY(-45px);
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes sideslidel {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes sideslide {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.adress {
+  text-align: center;
+  margin-top: 0;
+  font-size: 1.02vw;
+  color: gold;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  margin-left: 40px;
+  margin-right: 40px;
+  border: solid white 1px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+@media only screen and (max-width: 825px) {
+  .walletmain {
+    flex-direction: column;
+  }
+  .wallet {
+    height: 200px;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  .cryptodiv {
+    margin: 0;
+  }
+  header div a {
+    margin-left: 1%;
+    margin-right: 1%;
+  }
+  .divinfo {
+    width: 40%;
+    justify-content: space-between;
+  }
+  .divinfo button {
+    width: 45%;
+  }
+  .adress {
+    font-size: 3vw;
+  }
+}
