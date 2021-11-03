@@ -379,6 +379,10 @@ iframe {
     flex-direction: column;
     padding: 20px;
   }
+  .loginpopdiv {
+    width: 85%;
+    left: 7%;
+  }
   .divinfo {
     width: 100%;
   }
