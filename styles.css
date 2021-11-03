@@ -371,7 +371,11 @@ iframe {
   }
 }
 @media only screen and (max-width: 600px) {
-  .cryptodiv div{
-    flex-direction: row;
+  .bitcoindiv{
+    flex-direction: column;
+    padding: 20px;
+  }
+  .divinfo {
+    width: 100%;
   }
 }
