@@ -386,6 +386,12 @@ iframe {
   .divinfo {
     width: 100%;
   }
+  @media (orientation: landscape) {
+    .loginpopdiv {
+      width: 50%;
+      left: 25%;
+    }
+  }
 }
 }
 
