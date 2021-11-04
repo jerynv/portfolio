@@ -26,8 +26,8 @@ header div a {
   padding-left: 15px;
   padding-right: 15px;
   border-radius: 20px;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 10%;
+  margin-right: 10%;
   color: rgb(253, 253, 253);
 }
 
@@ -360,8 +360,8 @@ iframe {
     left: 7%;
   }
   header div a {
-    margin-left: 1%;
-    margin-right: 1%;
+    margin-left: 5%;
+    margin-right: 5%;
   }
   .divinfo {
     width: 40%;
@@ -373,26 +373,33 @@ iframe {
   .adress {
     font-size: 3vw;
   }
-
-@media all and (max-width: 500px) and (min-height: 9px){
-  .bitcoindiv{
-    flex-direction: column;
-    padding: 20px;
+@media only screen and (max-width: 600px){
+  header div a {
+    font-size: 12px;
+    padding: 7px;
+    margin-left: 7%;
+    margin-right: 7%;
   }
-  .loginpopdiv {
-    width: 85%;
-    left: 7%;
-  }
-  .divinfo {
-    width: 100%;
-  }
-  
 }
+
 @media (orientation: landscape) {
     .loginpopdiv {
+      font-size: 15px;
+      height: 70%;
       width: 50%;
       left: 25%;
     }
+    .loginpopdiv i{
+      font-size: 15px;
+    }
+    .loginpopdiv button{
+      margin: 5px;
+    }
+    .underlinepass {
+      margin: 0;
+      margin-left: 19px;
+    }
   }
 }
+
 
