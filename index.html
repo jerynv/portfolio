@@ -92,6 +92,10 @@
             $(".underlinepass").removeClass("red");
             $(".underlineuser").removeClass("red");
         });
+        $(".pass").click(function () {
+            $(".underlinepass").removeClass("red");
+            $(".underlineuser").removeClass("red");
+        });
         $(".loginbtn").on("click", function (event) {
             event.preventDefault();
             var input = $(".userinput").val();
@@ -112,21 +116,36 @@
                 $(".underlineuser").addClass("shake");
                 $(".loginlabel").addClass("shake");
                 setTimeout(removeshake, 300);
+                
                 attempts = attempts - 1;
                 if(attempts < 1){
                     localStorage.setItem('ban', "true")
                     window.location.href = "fuckyou.html";
                 }
                 else {
-                   $(".loginlabel").html("Incorrect: " + attempts)
-                $(".loginlabel").addClass("red"); 
+                   $(".loginlabel").html("Incorect: " + attempts)
+                   $(".loginlabel").addClass("red"); 
+                setTimeout(removeredlabel, 1000)
                 }
+                
             }
         });
+
+        function removeredlabel(){
+            $(".loginlabel").css("opacity", 0);
+            setTimeout(removeredlabel1, 410)
+        };
+
+        function removeredlabel1(){
+            $(".loginlabel").html("attempts: " + attempts).css("opacity", 0);
+            $(".loginlabel").css("opacity", 1);
+        };
+
         function removeshake(){
             $(".underlinepass").removeClass("shake");
                 $(".underlineuser").removeClass("shake");
                 $(".loginlabel").removeClass("shake"); 
+                
         };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>

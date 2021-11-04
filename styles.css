@@ -385,7 +385,7 @@ iframe {
 @media (orientation: landscape) {
     .loginpopdiv {
       font-size: 15px;
-      height: 70%;
+      height: 240px;
       width: 50%;
       left: 25%;
     }
