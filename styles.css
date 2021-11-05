@@ -436,9 +436,23 @@ iframe {
     margin-left: 7%;
     margin-right: 7%;
   }
+  .cryptodiv {
+    height: 100%;
+  }
     .infoimg {
       width: 130px;
     }
+
+  .bitcoindiv {
+    padding: 10PX;
+flex-direction: column;
+  }
+  .divinfo {
+    width: 100%;
+    margin-left: 10px;
+  }
+
+  
 }
 
 @media (orientation: landscape) {
