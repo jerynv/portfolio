@@ -10,6 +10,16 @@ body {
   background: rgb(65, 63, 63);
 }
 
+.headerimg:hover {
+  border:solid 2px rgba(255, 255, 255, 0.548);
+}
+
+.headerimg {
+  padding: 1px;
+  width: 27px;
+  border: solid 2px transparent;
+  border-radius: 20px;
+}
 header {
   display: flex;
   justify-content: space-between;
@@ -34,6 +44,8 @@ header div a {
 header div a:hover {
   background: rgba(170, 170, 170, 0.548);
 }
+
+
 
 .loginnav {
   padding: 0px;
@@ -63,7 +75,8 @@ header div {
 
 .loginpopdiv {
   display: none;
-  position: fixed;
+  position: absolute;
+  z-index: 1;
   left: 25%;
   top: 25%;
   color: rgb(253, 253, 253);
@@ -85,17 +98,15 @@ header div {
 
 .loginclosebtn {
   display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
   color: rgb(253, 253, 253);
   margin: 10px;
   border-radius: 20px;
   height: 25px;
   width: 25px;
+  text-align: center;
+  justify-content: center;
   background: rgb(253, 253, 253);
-  border: solid 0px;
-  overflow: visible;
+  border: solid 2px rgb(255, 255, 255, 0);
   background: none;
 }
 
@@ -108,8 +119,12 @@ header div {
     width: 87%;
 }
 
+
 .indexmain {
-  height: 700px;
+  display: flex;
+  padding-top: 10px;
+  flex-direction: row;
+  height: 90vh;
 }
 
 input {
@@ -119,6 +134,7 @@ input {
   font-size: 20px;
   margin-bottom: none;
   color: rgb(253, 253, 253);
+  width: 86%;
 }
 
 input:focus {
@@ -214,7 +230,6 @@ iframe {
   border-radius: 20px;
   overflow: scroll;
   width: 100%;
-  max-height: 670px;
   box-shadow: 1px 1px 3px 1px rgba(110, 110, 110, 0.226);
   animation: sideslidel 0.6s linear;
 }
@@ -227,13 +242,13 @@ iframe {
   border-radius: 20px;
   margin: 10px;
   padding-left: 10px;
-  color: whitesmoke;
+  color: rgb(253, 253, 253);
   box-shadow: 1px 1px 3px 0.1px rgba(211, 211, 211, 0.226);
 }
 
 .divinfo {
   width: 50%;
-  color: whitesmoke;
+  color: rgb(253, 253, 253);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -243,7 +258,7 @@ iframe {
 .divinfo button {
   padding: 10px;
   font-size: 15px;
-  color: whitesmoke;
+  color: rgb(253, 253, 253);
   width: 45%;
   height: 50px;
   background: none;
@@ -259,6 +274,7 @@ iframe {
   display: flex;
   flex-direction: row;
   padding: 20px;
+  height: 86vh;
 }
 
 .wallet {
@@ -269,7 +285,7 @@ iframe {
   width: 40%;
   margin: 10px;
   border-radius: 20px;
-  color: whitesmoke;
+  color: rgb(253, 253, 253);
   overflow: scroll;
   max-height: 640px;
   animation: sideslide 0.6s linear;
@@ -342,12 +358,52 @@ iframe {
   width: 80%;
 }
 
+.maintitle {
+  font-size: x-large;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+  color: rgb(253, 253, 253);
+  background:rgb(85, 85, 84);
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.leftmainholder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px;
+}
+
+.maindescription {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgb(253, 253, 253);
+  background: rgb(85, 85, 84);
+  width: 35%;
+  border-radius: 20px;
+  padding: 15px;
+  margin: 10px;
+  text-align: center;
+  overflow: scroll;
+}
+
+
+.infoimg {
+  width: 280px;
+}
+
 @media only screen and (max-width: 825px) {
   .walletmain {
     flex-direction: column;
   }
+  .infoimg {
+    width: 180px;
+  }
   .wallet {
-    height: 200px;
+    height: 50%;
     width: 100%;
     margin: 0;
     margin-bottom: 10px;
@@ -380,6 +436,9 @@ iframe {
     margin-left: 7%;
     margin-right: 7%;
   }
+    .infoimg {
+      width: 130px;
+    }
 }
 
 @media (orientation: landscape) {
@@ -389,7 +448,7 @@ iframe {
       width: 50%;
       left: 25%;
     }
-    .loginpopdiv i{
+    .loginpopdiv input{
       font-size: 15px;
     }
     .loginpopdiv button{
