@@ -8,6 +8,7 @@
 
 body {
   background: rgb(65, 63, 63);
+  height: 100vh;
 }
 
 .headerimg:hover {
@@ -474,7 +475,7 @@ flex-direction: column;
     }
 
     .walletmain {
-      height: 79vh;
+      height: 75%;
       flex-direction: row;
     }
     .bitcoindiv {
