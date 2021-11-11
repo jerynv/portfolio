@@ -9,6 +9,38 @@
   cursor: default;
 }
 
+.maintext {
+  color: white;
+  background: rgb(80, 80, 80);
+  border-radius: 5px;
+}
+
+.item {
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.loader {
+  display: none;
+  width: 40px;
+  height: 40px;
+  animation: spin infinite 1s ;
+  border-radius: 55px;
+  background: none;
+  border: 5px solid white;
+  border-top: solid 5px rgb(37, 37, 37);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(-360deg);
+  }
+}
+
 .passbtn {
   color: white;
   display: flex;
@@ -50,23 +82,20 @@ main {
 }
 
 .passholder {
-  position: fixed;
+  margin-top: 10px;
   display: flex;
   background: chartreuse;
-  justify-self: center;
-  align-self: center;
   justify-content: center;
+  align-content: center;
   align-items: center;
   background: rgb(80, 80, 80);
   flex-wrap: wrap;
-  left: 50%;
-  top: 50%;
   width: 300px;
   border-radius: 5px;
   flex-direction: column;
   padding-top: 20px;
-  padding-bottom: 10px;
-  transform: translate(-50%, -50%);
+  padding-bottom: 5px;
+  animation: loaddown linear .4s;
 }
 
 .buttonholder {
@@ -106,4 +135,50 @@ main {
   align-items: center;
   padding-top: 6px;
   padding-left: 2px;
+}
+
+.attempt.shake {
+  animation: shake ease-in-out .3s infinite;
+  border-color: rgb(226, 82, 56);
+  background: rgb(226, 82, 56) ;
+}
+
+@keyframes loaddown {
+  0% {
+    opacity: 0;
+    top: 40%;
+  }
+  
+}
+@keyframes loadup {
+  0% {
+    opacity: 0;
+    transform: translateY(45px);
+  }
+  
+}
+
+
+@keyframes shake {
+  0%{
+    transform: rotatez(-10deg);
+  }
+  25%{
+    transform: rotatez(10deg);
+  }
+  50% {
+    transform: rotatez(-10deg);
+  }
+  75% {
+    transform: rotatez(10deg);
+  }
+  100%{
+    transform: rotatez(-10deg);
+  }
+}
+
+.attempt.green {
+  background: rgb(54, 122, 66);
+  border-color: rgb(54, 122, 66);
+  
 }
