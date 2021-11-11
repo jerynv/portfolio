@@ -1,7 +1,21 @@
 
-var attemptcirlce = 1;
+var attemptcirlce = 0;
 var password = "";
 var result;
+var fail;
+
+window.addEventListener('load', function(){
+    localStorage.setItem('poop', false);
+    localStorage.setItem('load', true);
+
+})
+
+function chokehold(){
+    localStorage.setItem('load', false);
+    localStorage.setItem('uyejb', true);
+    localStorage.setItem('poop', true);
+    window.location = "/home.html"
+};
 const doubleStruckUpper = {
     1: "a", 2: "f", 0: "g",
     3: "k", 9: "l", 4: "p", 8: "j",
@@ -26,6 +40,13 @@ $(".passbtn3").click(function(){
 $(".passbtn4").click(function(){
     password = password + "4"
 });
+function checkup(){
+    localStorage.setItem('auth', true)
+    localStorage.setItem('failed', false)
+    password = "";
+    attemptcirlce = 0;
+    chokehold();
+};
 $(".passbtn5").click(function(){
     password = password + "5"
 });
@@ -51,7 +72,6 @@ $(".passbtnstar").click(function(){
     password = password + "*"
 });
 
-
 function checkpassord(){
     result = password.replace(/[0-9,#,*]/g, Letter => doubleStruckUpper[Letter]);
     checkpassword1();
@@ -64,33 +84,69 @@ function checkpassword1(){
     }).join('')
 
     if (result78 == "36bdn8s795n943598n4dyfeihcn8i3c543c54p32c42454c33c5345c4c5fc486n87izdm89cn4578395n9shgid4b5x2786324357cn9436n5c345vn472878injhui4r4mhfni4h7heniuh"){
-        window.location = "https://www.google.com"
-        attemptcirlce = 0;
-        password = "";
-        $(".attempt1").css("background", "none")
-        $(".attempt2").css("background", "none")
-        $(".attempt3").css("background", "none")
-        $(".attempt4").css("background", "none")
-        $(".attempt5").css("background", "none")
-        $(".attempt6").css("background", "none")
+        $(".attempt").addClass('green');
+        $(".attempt1").css("background", "rgb(54, 122, 66)")
+        $(".attempt2").css("background", "rgb(54, 122, 66)")
+        $(".attempt3").css("background", "rgb(54, 122, 66)")
+        $(".attempt4").css("background", "rgb(54, 122, 66)")
+        $(".attempt5").css("background", "rgb(54, 122, 66)")
+        $(".attempt6").css("background", "rgb(54, 122, 66)")
+        $(".attemptholder").fadeOut(410);
+        $(".buttonholder").fadeOut(410);
+        setTimeout(loader, 420)
+
     }
     else {
-        password = "";
-        $(".attempt1").css("background", "none")
-        $(".attempt2").css("background", "none")
-        $(".attempt3").css("background", "none")
-        $(".attempt4").css("background", "none")
-        $(".attempt5").css("background", "none")
-        $(".attempt6").css("background", "none")
+        
+        
         attemptcirlce = 0;
+        failed = true;
+        localStorage.setItem('failed', true)
+        $(".attempt1").css("background", "rgb(226, 82, 56)")
+        $(".attempt2").css("background", "rgb(226, 82, 56)")
+        $(".attempt3").css("background", "rgb(226, 82, 56)")
+        $(".attempt4").css("background", "rgb(226, 82, 56)")
+        $(".attempt5").css("background", "rgb(226, 82, 56)")
+        $(".attempt6").css("background", "rgb(226, 82, 56)")
+        $(".attempt").addClass('shake')
+        setTimeout(shakered, 410)
     }
 
     
 };
+function loader(){
+    $(".passholder").css("padding-bottom", "20px")
+    $(".loader").fadeIn(500);  
+    setTimeout(checkup, 3000);
+}
 
+window.addEventListener('load', function(){
+    localStorage.setItem('fail1', 'fuckoff');
+    localStorage.setItem('auth1', 'fuckoff');
+    localStorage.setItem('uyejb1', 'fuckoff');
+    localStorage.setItem('poop1', 'fuckoff');
+    localStorage.setItem('load1', 'fuckoff');
+    localStorage.setItem('failed', 'fuckoff');
+    localStorage.setItem('auth', 'fuckoff');
+    localStorage.setItem('uyejb', 'fuckoff');
+    localStorage.setItem('poop', 'fuckoff');
+    localStorage.setItem('load', 'fuckoff');
+});
+
+function shakered(){
+    $(".attempt").removeClass('shake')
+    $(".attempt1").css("background", "none")
+    $(".attempt2").css("background", "none")
+    $(".attempt3").css("background", "none")
+    $(".attempt4").css("background", "none")
+    $(".attempt5").css("background", "none")
+    $(".attempt6").css("background", "none")
+    attemptcirlce = 0;
+    password = "";
+};
 
 $(".passbtn").click(function(){
-    
+    attemptcirlce++;
     if (attemptcirlce == 0){
         $(".attempt1").css("background", "none")
         $(".attempt2").css("background", "none")
@@ -147,6 +203,7 @@ $(".passbtn").click(function(){
         $(".attempt5").css("background", "white")
         $(".attempt6").css("background", "white")
         checkpassord();
+        attemptcirlce = 0;
     }
-    attemptcirlce++;
+    
 });
