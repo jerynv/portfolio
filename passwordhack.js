@@ -72,6 +72,8 @@ $(".passbtnstar").click(function(){
     password = password + "*"
 });
 
+
+
 function checkpassord(){
     result = password.replace(/[0-9,#,*]/g, Letter => doubleStruckUpper[Letter]);
     checkpassword1();
@@ -145,6 +147,57 @@ function shakered(){
     password = "";
 };
 
+document.addEventListener('keypress', function (event) {
+    if (event.key == '1') {
+        password = password + "1"
+        keypress();
+    }
+    if (event.key == '2') {
+        password = password + "2"
+        keypress();
+    }
+    if (event.key == '3') {
+        password = password + "3"
+        keypress();
+    }
+    if (event.key == '4') {
+        password = password + "4"
+        keypress();
+    }
+    if (event.key == '5') {
+        password = password + "5"
+        keypress();
+    }
+    if (event.key == '6') {
+        password = password + "6"
+        keypress();
+    }
+    if (event.key == '7') {
+        password = password + "7"
+        keypress();
+    }
+    if (event.key == '8') {
+        password = password + "8"
+        keypress();
+    }
+    if (event.key == '9') {
+        password = password + "9"
+        keypress();
+    }
+    if (event.key == '*') {
+        password = password + "*"
+        keypress();
+    }
+    if (event.key == '0') {
+        password = password + "0"
+        keypress();
+    }
+    if (event.key == '#') {
+        password = password + "#"
+        keypress();
+    }
+  });
+
 $(".passbtn").click(function(){
     attemptcirlce++;
     if (attemptcirlce == 0){
@@ -207,3 +260,65 @@ $(".passbtn").click(function(){
     }
     
 });
+
+function keypress(){
+    attemptcirlce++;
+    if (attemptcirlce == 0){
+        $(".attempt1").css("background", "none")
+        $(".attempt2").css("background", "none")
+        $(".attempt3").css("background", "none")
+        $(".attempt4").css("background", "none")
+        $(".attempt5").css("background", "none")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 1){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "none")
+        $(".attempt3").css("background", "none")
+        $(".attempt4").css("background", "none")
+        $(".attempt5").css("background", "none")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 2){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "white")
+        $(".attempt3").css("background", "none")
+        $(".attempt4").css("background", "none")
+        $(".attempt5").css("background", "none")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 3){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "white")
+        $(".attempt3").css("background", "white")
+        $(".attempt4").css("background", "none")
+        $(".attempt5").css("background", "none")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 4){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "white")
+        $(".attempt3").css("background", "white")
+        $(".attempt4").css("background", "white")
+        $(".attempt5").css("background", "none")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 5){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "white")
+        $(".attempt3").css("background", "white")
+        $(".attempt4").css("background", "white")
+        $(".attempt5").css("background", "white")
+        $(".attempt6").css("background", "none")
+    }
+    else if (attemptcirlce == 6){
+        $(".attempt1").css("background", "white")
+        $(".attempt2").css("background", "white")
+        $(".attempt3").css("background", "white")
+        $(".attempt4").css("background", "white")
+        $(".attempt5").css("background", "white")
+        $(".attempt6").css("background", "white")
+        checkpassord();
+        attemptcirlce = 0;
+    }
+};
