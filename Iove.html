@@ -22,7 +22,7 @@
         }
         else
         {
-            window.location = 'index.html';
+            window.location = 'passwordhack.html';
             localStorage.setItem('fail1', 'fuckoff');
             localStorage.setItem('auth1', 'fuckoff');
             localStorage.setItem('uyejb1', 'fuckoff');
@@ -40,7 +40,7 @@
         }
         else
         {
-            window.location = 'index.html';
+            window.location = 'passwordhack.html';
             localStorage.setItem('fail1', 'fuckoff');
             localStorage.setItem('auth1', 'fuckoff');
             localStorage.setItem('uyejb1', 'fuckoff');
@@ -52,7 +52,8 @@
             localStorage.setItem('poop', 'fuckoff');
             localStorage.setItem('load', 'fuckoff');
         }
-            window.addEventListener('reload', function(){
+            function logout(){
+                window.location = "passwordhack.html"
             localStorage.setItem('fail1', 'fuckoff');
             localStorage.setItem('auth1', 'fuckoff');
             localStorage.setItem('uyejb1', 'fuckoff');
@@ -63,13 +64,14 @@
             localStorage.setItem('uyejb', 'fuckoff');
             localStorage.setItem('poop', 'fuckoff');
             localStorage.setItem('load', 'fuckoff');
-    });
+    };
 
 
 </script>
 </head>
 <body>
     succesful
+    <button  onclick="logout()">logout</button>
 </body>
 
 </html>

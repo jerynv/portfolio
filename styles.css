@@ -5,16 +5,34 @@
   font-family: 'Roboto Slab', serif;
 }
 
+/*/ forces cursor to stay the same when hovering over things /*/
 *:hover {
   cursor: default;
 }
 
+/*/ theme /*/
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
+main {
+  background: rgb(37, 37, 37);
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
+}
+
+/*/ title "Tormmint" /*/
 .maintext {
   color: white;
   background: rgb(80, 80, 80);
   border-radius: 5px;
 }
 
+
+/*/ all the contents /*/
 .item {
   position: fixed;
   text-align: center;
@@ -24,6 +42,7 @@
 }
 
 
+/*/ loader css /*/
 .loader {
   display: none;
   width: 40px;
@@ -35,12 +54,23 @@
   border-top: solid 5px rgb(37, 37, 37);
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(-360deg);
-  }
+/*/ the keypad /*/
+.passholder {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  background: rgb(80, 80, 80);
+  flex-wrap: wrap;
+  width: 300px;
+  border-radius: 5px;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  animation: loadin linear .4s;
 }
-
+/*/ all the buttons on the keypad /*/
 .passbtn {
   color: white;
   display: flex;
@@ -58,45 +88,20 @@
   transition: ease-in-out 0.2s;
 }
 
-.passbtnstar {
-  padding-top: 1px;
-  font-size: 20px;
-}
-
 .passbtn:hover {
   border: solid 2px white;
   border-radius: 10px;
 }
 
-body {
-  padding: 0px;
-  margin: 0px;
+/*/ centers the "*" in the text /*/
+.passbtnstar {
+  padding-top: 1px;
+  font-size: 20px;
 }
 
-main {
-  background: rgb(37, 37, 37);
-  width: 100vw;
-  height: 100vh;
-  margin: 0px;
-  padding: 0px;
-}
 
-.passholder {
-  margin-top: 10px;
-  display: flex;
-  background: chartreuse;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  background: rgb(80, 80, 80);
-  flex-wrap: wrap;
-  width: 300px;
-  border-radius: 5px;
-  flex-direction: column;
-  padding-top: 20px;
-  padding-bottom: 5px;
-  animation: loaddown linear .4s;
-}
+
+
 
 .buttonholder {
   display: flex;
@@ -143,22 +148,49 @@ main {
   background: rgb(226, 82, 56) ;
 }
 
-@keyframes loaddown {
-  0% {
-    opacity: 0;
-    top: 40%;
-  }
+.attempt.green {
+  background: rgb(54, 122, 66);
+  border-color: rgb(54, 122, 66);
   
 }
-@keyframes loadup {
+ 
+.itemnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+/*/ stops the button text from being high-lighted when clicked/*/
+.passbtn {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+
+
+/*/ smooth loadin animtion /*/
+@keyframes loadin {
   0% {
     opacity: 0;
-    transform: translateY(45px);
   }
   
 }
 
+/*/ spin animation /*/
+@keyframes spin {
+  0% {
+    transform: rotate(-360deg);
+  }
+}
 
+/*/ shake animation /*/
 @keyframes shake {
   0%{
     transform: rotatez(-10deg);
@@ -177,12 +209,9 @@ main {
   }
 }
 
-.attempt.green {
-  background: rgb(54, 122, 66);
-  border-color: rgb(54, 122, 66);
-  
-}
 
+
+/*/ resizes content "password holder" /*/
 @media only screen and (max-width: 800px){
   .passbtn {
     width: 40px;
@@ -194,15 +223,27 @@ main {
   .maintext {
     font-size: 13px;
   }
+  .homebtn{
+   padding: 0px;
+   font-size: 10px;
+  }
 }
 
+.resetbtn {
+  color: white;
+  background: rgb(80, 80, 80);
+  border: 2px transparent;
+  height: 30px;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: ease-in-out 0.2s;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 
-.passbtn {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+.resetbtn:hover {
+  border: solid 2px white;
+  border-radius: 10px;
 }
