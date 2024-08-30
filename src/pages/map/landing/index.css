@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    background: none;
+    transition: all 0.5s;
+}
+
+.hero {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+.information-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 1px var(--div-border-color-secondary);
+    border-left: var(  --div-border-starter);
+    background-color: var(--div-background-transparent);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    height: 560;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+
+
+.card-profile {
+    width: 90px;
+    border-radius: 100%;
+}
+
+.personal-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+}
+
+.name {
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.intro-texts {
+    padding-left: 20px;
+    display: block;
+    border-left: solid 1px var(--div-border-color-secondary);
+    width: 300px;
+}
+
+.intro-title {
+    font-size: 20px;
+}
+
+.intro-text {
+    color: var(--font-color-secondary);
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.projects-link {
+    text-decoration: none;
+}
+
+.projects-link:hover {
+    text-decoration: underline;
+}
+
+.card-btn {
+    margin-top: 0;
+    padding: 10px 10px;
+    background: var(--button-background-secondary);
+    color: var(--font-color-dark);
+    border: none;
+    width: 120px;
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.wave {
+    margin: 10px;
+}
+
+.card-btn:hover {
+    background: var(--button-hover-background-secondary);
+}
+
+.float-btn {
+    float: right;
+    position:relative;
+    right: 0;
+    bottom: 0;
+}
+
+#particles-js {
+    height: 100%;
+    z-index: 1;
+}
+
+i {
+    font-size: 16px;
+    transition: 0.3s;
+    color: var(--font-color);
+}
+
+.fa:hover {
+    color: var(--button-hover-background-secondary);
+
+}
+
+
+.right-arrow-all {
+    color: white;
+}
+
+@media screen and (max-width: 600px) {
+    .information-card.container-row {
+        flex-direction: column;
+    }
+
+    .personal-info.container-column{
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .wave {
+        margin: 5px;
+    }
+
+    .intro-texts {
+        border: none;
+        border-top: solid 1px var(--div-border-color-secondary);
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+}

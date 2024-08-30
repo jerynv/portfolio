@@ -1,0 +1,38 @@
+/*/ variable /*/
+
+:root {
+
+  /* background */
+  --background: #000000;
+
+  /* divs */
+  --div-background: #000000;
+  --div-background-transparent: #16161633;
+
+  /* buttons */
+  --button-background: #000000;
+  --button-background-secondary: #ffffff;
+  --button-hover-background: #161616;
+  --button-hover-background-secondary: #ffffff63;
+
+  /* borders */
+  --div-border-color: #161616;
+  --div-border-color-secondary: #2c2c2c;
+  --div-border-size-secondary: 0;
+  --div-border-starter: 4px solid #ffffff;
+
+  --button-border-color: #161616;
+  --button-border-size: 2px;
+  --border-radius-small: 5px;
+  --border-radius-large: 10px;
+
+  /* misc */
+  --error-color: #cb3e3e;
+  --primary-color: #ffffff;
+  --after-primary: #161616;
+
+  /* font */
+  --font-color: #ffffff;
+  --font-color-dark : #000000;
+  --font-color-secondary: #8a8a8a;
+}
