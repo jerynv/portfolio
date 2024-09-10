@@ -11,8 +11,9 @@ const server = Bun.serve({
     port: 3000,
     async fetch(req) {
 
-        colorLog(new URL(req.url).pathname)
+
         let path = new URL(req.url).pathname;
+        colorLog(path);
         if (path === '/') {
             return await Render("landing")
         }
