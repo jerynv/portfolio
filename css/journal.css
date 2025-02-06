@@ -1,0 +1,44 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    padding-top: 50px;
+    font-family: var(--font-body);
+    height: 100%;
+    width: 100%;
+    max-width: 800px;
+}
+
+main h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+main h1:after {
+    content: "";
+    display: block;
+    width: 300%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), 0.2);
+    margin: 20px 0;
+    animation: length ease-in-out 1s;
+}
+
+@keyframes length {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 300%;
+    }
+    
+}
+
+p {
+    margin-top: 30px;
+}
+
+
