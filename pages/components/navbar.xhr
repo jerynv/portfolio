@@ -1,0 +1,10 @@
+<ul>
+    <li class="img">
+        <a href="../index.html"><img src="/icon.ico" alt="" /></a>
+    </li>
+    <li><a href="/pages/journal.html">Journal</a></li>
+    <li><a href="/pages/projects.html">Projects</a></li>
+    <li><a href="/pages/contact.html">Contact</a></li>
+    <li><a href="/pages/docs.html">Docs</a></li>
+    <li><a href="/pages/sitemap.html">Sitemap</a></li>
+</ul>

@@ -1,0 +1,138 @@
+body {
+    padding-bottom: 10px;
+}
+
+main {
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    padding-top: 50px;
+    font-family: var(--font-body);
+    height: 100%;
+    width: 100%;
+    max-width: 800px;
+}
+
+main h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+main h1:after {
+    content: "";
+    display: block;
+    width: 300%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), 0.2);
+    margin: 20px 0;
+    animation: length ease-in-out 1s;
+}
+
+@keyframes length {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 300%;
+    }
+
+}
+
+.sitemap {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    align-items: start;
+    justify-content: start;
+    font-family: var(--font-body);
+    border: none;
+    border-left: dashed 1px rgba(var(--text), .5);
+    width: 100%;
+    max-width: 100%;
+}
+
+.sitemap ul {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sitemap li::before {
+    content: "■";
+    position: fixed;
+    align-self: center;
+    justify-self: center;
+    background: var(--text);
+    left: -15px;
+    top: 7px;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.sitemap ul li {
+    transform: translate(10.3px, 0);
+}
+
+.sitemap ul p {
+    margin-top: 5px;
+}
+
+.sitemap ul li:not(:first-child) {
+    margin-top: 20px;
+}
+
+/*/ auto incremint fade in for li based of child of ul i /*/
+
+.sitemap ul li:nth-child(1) {
+    animation: fadein 1s;
+}
+
+.sitemap ul li:nth-child(2) {
+    animation: fadein 1.3s;
+}
+
+.sitemap ul li:nth-child(3) {
+    animation: fadein 1.6s ;
+}
+
+.sitemap ul li:nth-child(4) {
+    animation: fadein 1.9s;
+}
+
+.sitemap ul li:nth-child(5) {
+    animation: fadein 2.1s;
+}
+
+.sitemap ul li:nth-child(6) {
+    animation: fadein 2.2s ;
+}
+
+.sitemap ul li:nth-child(7) {
+    animation: fadein 2.3s;
+}
+
+
+
+
+
+
+@keyframes fadein {
+    from {
+        transform: translate(10.3px, -20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(10.3px, 0);
+        opacity: 1;
+    }
+}

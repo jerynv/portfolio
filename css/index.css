@@ -1,0 +1,74 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px 20px 20px;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+.welcome{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-50px);
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    border: solid 1px rgba(var(--text), 1);
+}
+
+.hello {
+    font-family: var(--font-title);
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.hello:after {
+    content: "";
+    display: block;
+    width: 50%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), 0.2);
+    margin: 20px 0;
+}
+
+.welcome_text {
+    font-family: var(--font-body);
+    max-width: 750px;
+}
+
+.links {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.links li {
+    list-style: none;
+    display: flex;
+}
+
+/*/ all but last li ha / after it /*/
+
+.links li:not(:last-child)::after {
+    content: "/";
+    margin: 0 5px;
+}
+
+.links a {
+    margin: 0 5px;
+}

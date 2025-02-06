@@ -1,0 +1,201 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    font-family: var(--font-body);
+    width: 100%;
+    max-width: 800px;
+    scrollbar-width: 10px;
+}
+
+/*/ main overflow-y slider detail /*/
+
+main .h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+main .h1:after {
+    content: "";
+    display: flex;
+    width: 300%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), 0.2);
+    margin: 20px 0;
+    animation: length ease-in-out 1s;
+}
+
+@keyframes length {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 300%;
+    }
+
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.p {
+    margin-top: 30px;
+    color: rgba(var(--text), 0.8);
+}
+
+.link {
+    max-width: 1rem;
+    max-height: 1rem;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+
+.project {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    padding-top: 10px;
+    font-family: var(--font-body);
+    width: 100%;
+    max-width: 100%;
+}
+
+.project p {
+    margin-top: 10px;
+    color: rgba(var(--text), 0.6);
+    transition: none;
+}
+
+.text {
+    width: 40%;
+    color: rgba(var(--text), 0.2);
+}
+
+.text h2 {
+    font-size: 1.2rem;
+    display: inline-block;
+    align-items: center;
+    justify-content: start;
+}
+
+.text .h2 {
+    font-size: 1.2rem;
+    display: inline-block;
+    align-items: center;
+    justify-content: start;
+}
+
+
+/*/ if .text h2 has a child element .link underline .text h2 /*/
+
+.text .h2:has(.link) {
+    text-decoration: underline;
+}
+
+
+.screenshot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    padding: 0px 0px 0px 40px;
+    height: 100%;
+}
+
+.screenshot img {
+    width: 100%;
+    border-radius: 20px;
+    border: solid 1px rgba(var(--text), 0.2);
+}
+
+.screenshot video {
+    width: 100%;
+    border-radius: 20px;
+    border: solid 1px rgba(var(--text), 0.2);
+}
+
+
+
+.project::before {
+    content: "";
+    display: block;
+    width: 95%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), 0.2);
+    margin: 20px 0;
+}
+
+@media (min-width: 851px) {
+    main .project:nth-child(even) .container {
+        justify-content: center;
+        align-items: center;
+        flex-direction: row-reverse;
+    }
+
+    main .project:nth-child(even) .screenshot {
+        padding: 0px 40px 0px 0px;
+    }
+
+    .screenshot {
+        justify-self: center;
+        align-self: center;
+    }
+}
+
+/*/ alternating flex revers for odd .project /*/
+
+/* 850px breakpoint */
+
+@media (max-width: 850px) {
+    main .project:nth-child(even) .container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    main .project:nth-child(even).screenshot {
+        padding: 20px 0px 0px 0px;
+        width: 100%;
+    }
+
+    .container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .screenshot {
+        padding: 20px 0px 0px 0px;
+        width: 100%;
+    }
+
+    .screenshot video {
+        max-width: 500px;
+    }
+
+    .screenshot img {
+        max-width: 500px;
+    }
+
+    .text {
+        padding: 0px 0px;
+        width: 100%;
+        max-width: 500px;
+    }
+
+
+}
