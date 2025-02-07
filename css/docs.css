@@ -37,11 +37,12 @@ main h1:after {
 @keyframes length {
     0% {
         width: 0%;
-    }q  
-    100% {
+    }
+
+    q 100% {
         width: 100%;
     }
-    
+
 }
 
 .doc {
@@ -76,24 +77,23 @@ main h1:after {
 
 .tree-base {
     width: 100%;
-    padding-right: 10px;
 }
 
-.tree-base p{
+.tree-base p {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.tree-base:hover{
+.tree-base:hover {
     cursor: pointer;
 }
 
-.tree-base:has(.tree-child-container.active) .icon {
+.tree-base:has(> .tree-child-container.active) > p .icon {
     transform: scaley(-1);
 }
 
-.tree-base:has(.tree-child-container.active) .icon * {
+.tree-base:has(> .tree-child-container.active) > p * {
     color: rgb(var(--text));
 }
 
@@ -108,11 +108,11 @@ main h1:after {
     overflow: hidden;
 }
 
-.tree-child-container.active{
+.tree-child-container.active {
     max-height: 100000%;
 }
 
-.tree-child{
+.tree-child {
     margin-left: 10px;
     padding-left: 5px;
     border-radius: 0px;
@@ -131,7 +131,7 @@ main h1:after {
     background: rgb(var(--text), 0.07);
 }
 
-.tree-child:hover{
+.tree-child:hover {
     background: rgb(var(--text), 0.03);
     cursor: pointer;
 }
@@ -154,7 +154,6 @@ main h1:after {
     flex-direction: column;
     align-items: start;
     justify-content: start;
-    color: aqua;
     width: 100%;
     padding-left: 10px;
 }
@@ -165,21 +164,24 @@ main h1:after {
     padding-right: 10px;
 }
 
-.nested-tree-base p{
+.nested-tree-base p {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.tree-base:hover{
+.tree-base:hover {
     cursor: pointer;
 }
 
-.nested-tree-base:has(.tree-child-container.active) .icon {
+
+
+.nested-tree-base:has(> .nested-tree-child-container.active) .icon {
     transform: scaley(-1);
 }
 
-.nested-tree-base:has(.tree-child-container.active) .icon * {
+.nested-tree-base:has(> .nested-tree-child-container.active) .icon * {
     color: rgb(var(--text));
 }
 
@@ -194,6 +196,6 @@ main h1:after {
     overflow: hidden;
 }
 
-.nested-tree-child-container.active{
+.nested-tree-child-container.active {
     max-height: 100000%;
 }
