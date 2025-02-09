@@ -11,13 +11,23 @@ class Documentaion {
             for (const key in item) {
                 switch (key) {
                     case "codeSnippet":
-                        this.createCodeSnippet(item[key]);
+                        console.log("key>>>", item[key]);
+                        this.createCodeSnippet(item[key].type, item[key].data);
                         break;
                     case "text":
                         this.createText(item[key]);
                         break;
                     case "title":
                         this.createTitle(item[key]);
+                        break;
+                    case "description":
+                        this.createDescription(item[key]);
+                        break;
+                    case "label":
+                        this.createLabel(item[key]);
+                        break;
+                    case "smallLabel":
+                        this.createSmallLabel(item[key]);
                         break;
                     case "list":
                         this.createList(item[key]);
@@ -34,16 +44,99 @@ class Documentaion {
         this.render();
     }
 
-    createCodeSnippet(code) {
+    createCodeSnippet(language, code) {
+        const formattedCode = js_beautify(code, {
+            indent_size: 2,
+        });
         const element = document.createElement("div");
+        const options = document.createElement("div");
+        const copyButton = document.createElement("span");
+        const languageText = document.createElement("span");
+        languageText.textContent = language;
+        copyButton.textContent = "Copy";
+        options.appendChild(languageText);
+        options.appendChild(copyButton);
+        element.appendChild(options);
+        const pre = document.createElement("pre");
+        const codeElement = document.createElement("code");
+
+        copyButton.addEventListener("click", () => {
+            if (
+                copyButton.textContent === "Copied" ||
+                copyButton.textContent === "Once more?"
+            ) {
+                copyButton.textContent = "Once more?";
+            } else {
+                navigator.clipboard.writeText(formattedCode);
+                copyButton.textContent = "Copied";
+                setInterval(() => {
+                    copyButton.textContent = "Copy";
+                }, 5000);
+            }
+        });
+        copyButton.classList.add("copy-button");
+        options.classList.add("code-snippet-info");
         element.classList.add("code-snippet");
-        element.innerHTML = code;
+        codeElement.classList.add("language-" + language);
+        codeElement.textContent = formattedCode;
+
+        pre.appendChild(codeElement);
+        element.appendChild(pre);
         this.content.appendChild(element);
+
+        hljs.highlightElement(codeElement);
     }
 
     createTitle(text) {
         const element = document.createElement("h1");
+
         element.innerHTML = text;
+        this.content.appendChild(element);
+    }
+
+    createLabel(text) {
+        const element = document.createElement("h2");
+
+        element.classList.add("label");
+        element.innerHTML = text;
+        this.content.appendChild(element);
+    }
+
+    createSmallLabel(text) {
+        const element = document.createElement("h2");
+
+        element.classList.add("small-label");
+        element.innerHTML = text;
+        this.content.appendChild(element);
+    }
+
+    createDescription(text) {
+        const element = document.createElement("p");
+
+        element.classList.add("description");
+        element.innerHTML = text;
+        this.content.appendChild(element);
+    }
+
+    createText(text) {
+        const element = document.createElement("p");
+
+        element.classList.add("doc-content-text");
+        element.innerHTML = text;
+        this.content.appendChild(element);
+    }
+
+    createList(list) {
+        const element = document.createElement("ul");
+
+        for (const item of list) {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = item;
+            element.appendChild(listItem);
+        }
+
+        element.classList.add("doc-content-list");
+
         this.content.appendChild(element);
     }
 
@@ -213,6 +306,10 @@ class Docs {
         this.doc_controller.init(response);
     }
 
+    forceOpen() {
+        this.load("ios eq bridge/intro", "thoughts");
+    }
+
     render() {
         this.parent.appendChild(this.content);
     }
@@ -222,57 +319,19 @@ const docs_template = {
     tree: {
         "pollchat hack": {
             children: {
-                intro: {
-                    page: "intro",
+                "The hack": {
+                    page: "hack",
                 },
-                navbhar: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                navbar: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                navbear: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                footer: { page: "Footer" },
             },
         },
-        "pollchat hack2": {
+        "Ios Eq bridge": {
             children: {
                 intro: {
                     children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
+                        thoughts: { page: "thoughts" },
+                        development: { page: "development" },
                     },
                 },
-                navbhar: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                navbar: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                navbear: {
-                    children: {
-                        exponents: { page: "Navbar" },
-                        Headers: { page: "Headers" },
-                    },
-                },
-                footer: { page: "Footer" },
             },
         },
     },
@@ -283,3 +342,4 @@ const docController = new Documentaion(".output");
 const docs = new Docs(docs_template, ".tree", docController);
 docs.init();
 docs.render();
+docs.forceOpen();
