@@ -142,6 +142,8 @@ class Documentaion {
 
     render() {
         this.parent.appendChild(this.content);
+        //scroll to top of the page
+        this.parent.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     destroy() {
