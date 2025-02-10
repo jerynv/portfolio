@@ -31,9 +31,9 @@
         ]
     },
     {
-        "smallLabel": "Challenges"
+        "smallLabel": "Expected challenges"
     },
     {
-        "text": "The main challenges I was ready to face consists of, audio latency, audio quality, the UI, needing to rewrite the audio handling functionality of my app. and lack of functionality Flutter has with bridging. The audio latency was a big concern as the audio would have to be processed in real time. The Ui was a concern because  "
+        "text": "The main challenges I was ready to face consists of, audio latency, audio quality, the UI, needing to rewrite the audio handling functionality of my app. and lack of functionality Flutter has with bridging. The audio latency was a big concern as the audio would have to be processed in real time. The Ui was a concern because there was no public libraries that would allow me to easily implement their design into my app., and i have never worked with Flutters custom painter functionality. I had also expected to have trouble with Flutter bridging as I have never worked with it before."
     }
 ]
