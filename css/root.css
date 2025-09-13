@@ -5,6 +5,16 @@
     line-height: 1.5;
     color: rgb(var(--text));
     transition: color ease-in-out .5s;
+    overscroll-behavior: none;
+}
+
+*:focus-visible {
+    outline: 2px solid rgb(var(--text));
+    outline-offset: 2px;
+}
+
+*:active {
+    outline: none !important;
 }
 
 :root {
@@ -21,8 +31,8 @@ body {
     justify-content: flex-start;
     align-items: center;
     padding: 0px 20px 50px 20px;
-    height: 100%;
-    overflow-y: scroll;
+    height: 100dvh;
+    overflow-y: auto;
     width: 100vw;
     background: rgb(var(--mode));
 }
@@ -54,17 +64,18 @@ a {
 }
 
 header * {
-    animation: ease_in 1s;
+    /* animation: ease_in 1s; */
 }
 
 @keyframes ease_in {
     0% {
         opacity: 0;
-        transform: translateY(-20px);
+        /* transform: translateY(-20px); */
     }
+
     100% {
         opacity: 1;
-        transform: translateY(0);
+        /* transform: translateY(0); */
     }
 }
 
@@ -85,8 +96,8 @@ header {
 header ul {
     display: flex;
     justify-content: flex-start;
-    align-items: flex-end;
-    text-align: end;
+    align-items: center;
+    text-align: center;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -101,7 +112,7 @@ header ul li {
 }
 
 header ul li:not(:last-child)::after {
-    content: "/"; 
+    content: "/";
     margin: 0 10px;
 }
 
@@ -124,42 +135,92 @@ header ul li:not(:last-child)::after {
 header img {
     height: 25px;
     border-radius: 10px;
-    margin-right: 10px;
 }
 
 header a {
     font-family: var(--font-body);
     text-decoration: none;
     font-weight: normal;
-    text-decoration-style:none;
+    text-decoration-style: none;
     color: rgb(var(--text));
 }
 
 header svg {
-    height: 50%;
-    margin: 10px 10px 0px 10px;
-    border-radius: 25px;
-    transition: ease-in-out 0.5s;
+
+    display: block;
+
+    margin: auto;
+
+    width: 100%;
+    height: 100%;
+
+    transition: rotate ease-in-out 0.5s;
+
+    animation: none;
 }
 
-header svg:hover {
+header .mode-icon {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+    color: rgb(var(--text), 0.7);
+    cursor: pointer;
+
+    animation: none;
+
+}
+
+header .mode-icon:hover svg {
     rotate: 45deg;
+
 }
 
 header svg:active {
     color: rgb(var(--text));
+    outline: none !important;
 }
 
-@media (max-width: 450px) {
-    header li a{
-        font-size: 10px;
+@media (max-width: 520px) {
+    body {
+        padding: 0px;
+    }
+
+    main {
+        padding-inline: 10px;
+    }
+
+    header {
+        padding-inline: 10px;
+    }
+
+    header li a {
+        font-size: 12px;
     }
 
     header ul li:after {
-        font-size: 10px;
+        font-size: 12px;
     }
 
     header .img::after {
         font-size: 0px;
+    }
+
+    header .img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+    header .mode-icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+     header .mode-icon {
+       display: none;
     }
 }

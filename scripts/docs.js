@@ -12,7 +12,7 @@ class Documentaion {
                 switch (key) {
                     case "codeSnippet":
                         console.log("key>>>", item[key]);
-                        this.createCodeSnippet(item[key].type, item[key].data);
+                        this.createCodeSnippet(item[key].type, item[key].data, item[key].name);
                         break;
                     case "text":
                         this.createText(item[key]);
@@ -33,7 +33,10 @@ class Documentaion {
                         this.createList(item[key]);
                         break;
                     case "image":
-                        this.createImage(item[key]);
+                        this.createImage(item[key].src, item[key].size);
+                        break;
+                    case "link":
+                        this.createText(`<a href="${item[key].href}" target="_blank" rel="noopener">${item[key].text}</a>`, 'html');
                         break;
                     default:
                         console.log("no key found");
@@ -44,7 +47,7 @@ class Documentaion {
         this.render();
     }
 
-    createCodeSnippet(language, code) {
+    createCodeSnippet(language, code, replacementName) {
         const formattedCode = js_beautify(code, {
             indent_size: 2,
         });
@@ -52,7 +55,7 @@ class Documentaion {
         const options = document.createElement("div");
         const copyButton = document.createElement("span");
         const languageText = document.createElement("span");
-        languageText.textContent = language;
+        languageText.textContent = replacementName || language;
         copyButton.textContent = "Copy";
         options.appendChild(languageText);
         options.appendChild(copyButton);
@@ -67,11 +70,14 @@ class Documentaion {
             ) {
                 copyButton.textContent = "Once more?";
             } else {
-                navigator.clipboard.writeText(formattedCode);
-                copyButton.textContent = "Copied";
-                setInterval(() => {
-                    copyButton.textContent = "Copy";
-                }, 5000);
+                navigator.clipboard.writeText(formattedCode).then(() => {
+                    copyButton.textContent = "Copied";
+                    setTimeout(() => {
+                        copyButton.textContent = "Copy";
+                    }, 5000);
+                }).catch(err => {
+                    console.error("Clipboard copy failed:", err);
+                });
             }
         });
         copyButton.classList.add("copy-button");
@@ -82,6 +88,7 @@ class Documentaion {
 
         pre.appendChild(codeElement);
         element.appendChild(pre);
+        //when scrolled down or up inside the code box ripple the event up to the parent
         this.content.appendChild(element);
 
         hljs.highlightElement(codeElement);
@@ -118,11 +125,15 @@ class Documentaion {
         this.content.appendChild(element);
     }
 
-    createText(text) {
+    createText(text, type = 'text') {
         const element = document.createElement("p");
 
         element.classList.add("doc-content-text");
-        element.innerHTML = text;
+        if (type === 'html') {
+            element.innerHTML = text;
+        } else {
+            element.innerText = text;
+        }
         this.content.appendChild(element);
     }
 
@@ -139,6 +150,18 @@ class Documentaion {
 
         this.content.appendChild(element);
     }
+
+    createImage(src, size) {
+        const div = document.createElement("div");
+        div.classList.add("doc-image-container");
+        this.content.appendChild(div);
+        const img = document.createElement("img");
+        img.src = src;
+        img.classList.add("doc-image");
+        img.style.maxWidth = size;
+        div.appendChild(img);
+    }
+
 
     render() {
         this.parent.appendChild(this.content);
@@ -162,6 +185,7 @@ class Docs {
     }
 
     init() {
+        this.parent.tabIndex = 0;
         //for every key in object create a new element with the key as the text and every child as a child div
         const element = document.createElement("div");
         element.classList.add("tree-element");
@@ -171,6 +195,7 @@ class Docs {
             const text = document.createElement("p");
             const element_base = document.createElement("div");
             element_base.classList.add("tree-base");
+            element_base.tabIndex = -1;
             text.innerHTML = key;
             text.appendChild(icon.firstChild);
             text.addEventListener("click", () => {
@@ -186,6 +211,12 @@ class Docs {
                         element_base.querySelector(".tree-child-container")
                     ) {
                         item.classList.remove("active");
+                        // const treeChildren = item.querySelectorAll(
+                        //     ".tree-child"
+                        // );
+                        // for (const child of treeChildren) {
+                        //     child.tabIndex = -1;
+                        // }
                     }
                 }
             });
@@ -210,7 +241,16 @@ class Docs {
                 }
                 childrenTree.appendChild(childElement);
                 childElement.addEventListener("click", () => {
-                    //set active for this element and remove for element in the entire scope of tree-element
+                    handleChildClick.call(this);
+                });
+
+                childElement.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        handleChildClick.call(this);
+                    }
+                });
+
+                function handleChildClick() {//set active for this element and remove for element in the entire scope of tree-element
                     const active =
                         document.querySelectorAll(".tree-child.active");
                     for (const item of active) {
@@ -221,11 +261,120 @@ class Docs {
                     childElement.classList.toggle("active");
                     //and the parent element name under the tree key
                     this.load(key, this.obj[key].children[child].page);
-                });
+                }
             }
+
+            //now for accesibility add keyboard navigation to the tree base
+            // element_base.addEventListener("keydown", (e) => {
+            //     if (e.key === "Enter" || e.key === " ") {
+            //         e.preventDefault();
+            //         text.click();
+            //     } else if (e.key === "ArrowDown") {
+            //         e.preventDefault();
+            //         const next = element_base.nextElementSibling;
+            //         if (next) {
+            //             next.querySelector("p").focus();
+            //         }
+            //     } else if (e.key === "ArrowUp") {
+            //         e.preventDefault();
+            //         const prev = element_base.previousElementSibling;
+            //         if (prev) {
+            //             prev.querySelector("p").focus();
+            //         }
+            //     }
+            // });
+
             element_base.appendChild(childrenTree);
             element.appendChild(element_base);
         }
+
+        //when the user hits and acessibility key to fous down onto the tree have the first tree-base focused and then the user can navigate with arrow keys and or tab and let them be able to jump out of the tree with tab
+        //get all the tree-base elements
+        const treeBases = element.querySelectorAll(".tree-base");
+        this.parent.addEventListener("keydown", (e) => {
+            //let default hapen first before we do anything
+
+            if ((e.key === "Enter" || e.key === " ") && !e.shiftKey) {
+                if (e.target.closest('.tree-base')) return; //dont do anything if the user is already focused on a tree base
+                // the tree-base has a focus of -1 i want to chane all of those if the user hits space or enter on the parent element
+                for (const treeBase of treeBases) {
+                    treeBase.tabIndex = 0;
+
+                    treeBase.addEventListener("focus", () => {
+                        //when a user focuses on a tree base check if it has a class of active if so set all its children abIndexes to 0 becaue we know its now open
+                        if (treeBase.querySelector(".tree-child-container").classList.contains("active")) {
+                            const treeChildren = treeBase.querySelectorAll(
+                                ".tree-child"
+                            );
+                            for (const child of treeChildren) {
+                                child.tabIndex = 0;
+                            }
+                        }
+                    });
+
+                    treeBase.addEventListener("keydown", (e) => {
+                        // const all tree-child elements
+
+
+                        if (e.key !== "Enter" && e.key !== " ") return;
+                        if (e.target.closest('.tree-child')) return; //dont do anything if the user is already focused on a tree base
+
+                        treeBase.querySelector("p").click();
+
+                        const treeChildren = treeBase.querySelectorAll(
+                            ".tree-child"
+                        );
+
+
+                        //check if the treebase is now active
+                        if (
+                            treeBase.querySelector(".tree-child-container").classList.contains("active") &&
+                            treeChildren.length > 0
+                        ) {
+                            //focus the first child element
+                            for (const child of treeChildren) {
+                                child.tabIndex = 0;
+                            }
+                        } else {
+                            //if its not active then focus back on the tree base
+                            for (const child of treeChildren) {
+                                child.tabIndex = -1;
+                            }
+                            treeBase.focus();
+                        }
+                    });
+
+                    treeBase.addEventListener("focusout", (e) => {
+                        //if the user focuses out of the tree-base and its children then set all tree-base tabIndex to -1
+                        console.log("focusout", e.relatedTarget);
+                        const treeChildren = treeBase.querySelectorAll(
+                            ".tree-child"
+                        );
+
+
+                        //have to check that the related target is not the last child of the current tree base
+                        if (treeBase.contains(e.relatedTarget) && e.relatedTarget !== treeChildren[treeChildren.length - 1]) return; //dont do anything if the user is still focused inside the tree base or its children
+
+                        console.log("setting tabIndex to -1");
+                        for (const child of treeChildren) {
+
+                            child.tabIndex = -1;
+                        }
+                    });
+                }
+                treeBases[0].focus();
+            }
+        });
+
+        this.parent.addEventListener("focus", (e) => {
+            //if the user focuses on the parent element and the target is not a child of the tree element then set all tree-base tabIndex to -1
+            if (!e.target.closest(".tree-element")) {
+                for (const treeBase of treeBases) {
+                    treeBase.tabIndex = -1;
+                }
+            }
+        });
+
         this.content = element;
     }
 
@@ -241,6 +390,7 @@ class Docs {
             const text = document.createElement("p");
             const element_base = document.createElement("div");
             element_base.classList.add("nested-tree-base");
+            text.tabIndex = 0;
             text.innerHTML = name;
             text.appendChild(icon.firstChild);
             text.addEventListener("click", () => {
@@ -308,8 +458,52 @@ class Docs {
         this.doc_controller.init(response);
     }
 
-    forceOpen() {
-        this.load("ios eq bridge/intro", "thoughts");
+    forceOpen(name, page) {
+        // visually open the dropdown aswell for the selected open
+        const parts = name.split("/").map(p => p.trim().toLowerCase());
+        console.log("parts", parts);
+
+        let currentBase = document; // start from the whole document
+
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+
+            // find the matching <p> inside the current tree level
+            const node = document.evaluate(
+                `.//p[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "${part}")]`,
+                currentBase,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+
+            if (!node) {
+                console.warn("Part not found:", part);
+                break;
+            }
+
+            // open the dropdown (tree-child-container) at this level
+            const container = node.parentElement.querySelector(".tree-child-container, .nested-tree-child-container");
+            if (container) {
+                container.classList.add("active");
+            }
+
+            // If this is the last part → mark as active page
+            if (i === parts.length - 1) {
+                // node.parentElement.classList.add("active");
+            }
+
+            // set base for next iteration (so it searches inside the opened node)
+            currentBase = node.parentElement;
+        }
+
+        const pageElement = document.evaluate(`//div[contains(@class, "tree-child")]/text()[contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "${page.toLowerCase()}")]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        console.log('pageElement', pageElement);
+        if (pageElement) {
+            pageElement.parentElement.classList.add("active");
+        }
+
+        this.load(name, page);
     }
 
     render() {
@@ -319,21 +513,31 @@ class Docs {
 
 const docs_template = {
     tree: {
+        "Documentation": {
+            children: {
+                intro: { page: "intro" },
+                development: { page: "development" },
+                contribute: { page: "contribute" },
+            },
+        },
         "pollchat hack": {
             children: {
                 "The hack": {
-                    page: "hack",
+                    page: "thehack",
                 },
             },
         },
         "Ios Eq bridge": {
             children: {
-                intro: {
-                    children: {
-                        thoughts: { page: "thoughts" },
-                        development: { page: "development" },
-                    },
-                },
+                thoughts: { page: "thoughts" },
+                development: { page: "development" },
+                usage: { page: "usage" },
+            },
+        },
+        "Tennis notifier": {
+            children: {
+                development: { page: "development" },
+                notifier: { page: "notifier" }
             },
         },
     },
@@ -344,4 +548,4 @@ const docController = new Documentaion(".output");
 const docs = new Docs(docs_template, ".tree", docController);
 docs.init();
 docs.render();
-docs.forceOpen();
+docs.forceOpen("Documentation", "intro");

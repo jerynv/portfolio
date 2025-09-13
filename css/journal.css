@@ -31,14 +31,68 @@ main h1:after {
     0% {
         width: 0%;
     }
+
     100% {
         width: 300%;
     }
-    
+
 }
 
 p {
     margin-top: 30px;
 }
 
+#journal-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
 
+.journal-entry {
+    position: relative;
+
+    padding: 5px;
+    padding-bottom: 10px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    transition: ease-in-out .5s
+}
+
+.journal-entry:hover {
+    cursor: pointer;
+    background-color: light-dark(rgba(var(--text), 0.1), rgba(var(--text), 1));
+}
+
+.journal-entry::after {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+
+    margin-inline: 20px;
+
+    flex-grow: 1;
+    height: 1px;
+    content: "";
+    flex-grow: 1;
+    background-color: rgba(var(--text), .2);
+}
+
+.journal-date {
+    margin: 0;
+    padding: 0;
+    margin-right: 30px;
+
+    font-weight: lighter;
+}
+
+.journal-title {
+    margin: 0;
+    padding: 0;
+
+    font-weight: bold;
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Tennis Court Availability Scraper",
+    "version": "1.0.0"
+  },
+  {
+    "description": "This script fetches court availability from the Club Automation tennis scheduling system and outputs the available time slots for each court as a JSON object. It uses Cheerio to parse HTML, Moment.js to format and calculate timestamps, and Node.js for file handling."
+  },
+  {
+    "smallLabel": "Setup and Fetch"
+  },
+  {
+    "text": "We first define a payload containing the date and location information to query the court schedule. This payload is sent as a URL-encoded POST request to the endpoint `https://csw.clubautomation.com/resource/court-schedule?&ajax=true` with appropriate headers to mimic browser requests."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "let fetchData = {\n  multiSelectData: \"\",\n  season: \"\",\n  schedule_id: \"\",\n  component_id: 2,\n  readonly: 1,\n  skipStaffAvailabilityCheck: 0,\n  date: moment().format(\"MM/DD/YYYY\"),\n  locations: 1,\n  types: \"all\",\n};\nfetchData = new URLSearchParams(fetchData);\n\nlet content = await fetch(\"https://csw.clubautomation.com/resource/court-schedule?&ajax=true\", {\n  headers: { /* headers mimicking browser */ },\n  body: fetchData,\n  method: \"POST\"\n}).then(response => response.text());"
+    }
+  },
+  {
+    "smallLabel": "Parsing the HTML"
+  },
+  {
+    "text": "The response contains HTML representing the schedule. We use Cheerio to traverse the `<td>` elements. Each element with an id that matches `court_<id>_row_<time>` represents a court time slot. Only enabled slots are considered."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "const Dom = cheerio.load(content);\nlet data = {};\nDom(\"td\").each((index, element) => {\n  let courtTranslator = { 45: \"court 1\", 46: \"court 2\", 47: \"court 3\", 48: \"court 4\", 49: \"court 5\", 50: \"court 6\", 51: \"court 7\", 162: \"court 8\" };\n  if (element.attribs && element.attribs.id && element.attribs.id.includes(\"court\") && !element.attribs.class?.toLowerCase().includes(\"notenabled\")) {\n    let parsed = element.attribs.id.split(\"_\");\n    let courtName = courtTranslator[parsed[1]];\n    let time = parsed[3];\n    let formattedTime = moment(time, \"HH:mm:ss\").format(\"hh:mm A\");\n    let timeData = { time: formattedTime, seconds: moment(time, \"HH:mm:ss\").unix() };\n    if (!data[courtName]) data[courtName] = [];\n    data[courtName].push(timeData);\n  }\n});"
+    }
+  },
+  {
+    "smallLabel": "Helper Function"
+  },
+  {
+    "text": "A utility function `containsAny` is used to filter only the courts we want by checking if the element id includes any of the allowed court ids."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "function containsAny(value, list) {\n  return list.some(item => value.includes(item));\n}"
+    }
+  },
+  {
+    "smallLabel": "Output"
+  },
+  {
+    "text": "Finally, the data is written to `data.json` as a JSON object with each court as a key and its available times as an array of objects containing `time` and `seconds`."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "fs.writeFileSync(\"data.json\", JSON.stringify(data, null, 2));"
+    }
+  }
+]
