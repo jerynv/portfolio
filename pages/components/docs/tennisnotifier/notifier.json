@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Tennis Court Notifier (Private Endpoint)",
+    "version": "1.0.0"
+  },
+  {
+    "description": "This Bun.js module monitors tennis court availability from Club Automation's scheduling system and notifies users when desired time slots become available. Note that the endpoint being accessed is not public and is unsecure, meaning that anyone with knowledge of the endpoint and request parameters can access sensitive scheduling information. Use of this module should respect the service's terms of use and user privacy."
+  },
+  {
+    "smallLabel": "Initialization"
+  },
+  {
+    "text": "The `init` function ensures a local user file exists and starts the monitoring process. If `users.json` does not exist under `./private/test/`, it is created as an empty JSON file. Then `checkCourts()` is triggered immediately to start the monitoring loop."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "export default async function init() {\n    if (!(await Bun.file(\"./private/test/users.json\").exists())) {\n        await Bun.write(\"./private/test/users.json\", JSON.stringify({}, null, 4));\n    }\n    await checkCourts();\n}"
+    }
+  },
+  {
+    "smallLabel": "Court Availability Checking"
+  },
+  {
+    "text": "The `checkCourts` function runs periodically. It prevents overlapping executions using `isRunning`. For each user, it iterates through active notifiers, disables expired notifiers, fetches court data for each relevant date, and calls `timeChecker` to evaluate available slots. Because the endpoint is unsecure, any user data used must be handled carefully and not exposed."
+  },
+  {
+    "smallLabel": "Time Slot Conversion"
+  },
+  {
+    "text": "Court schedules are fetched in 15-minute intervals. `timeChecker` merges consecutive intervals into availability blocks, creating `from` and `to` timestamps. This is necessary to handle the unstructured data from the unsecure endpoint."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "let availability = [];\nlet startTime = times[0];\nlet previousTime = startTime;\nfor (let i = 1; i < times.length; i++) {\n    let currentTime = times[i];\n    if (currentTime.seconds !== previousTime.seconds + 900) {\n        availability.push({ from: startTime, to: { time: moment(previousTime.time, 'hh:mm A').add(15,'minutes').format('hh:mm A'), seconds: previousTime.seconds+900 } });\n        startTime = currentTime;\n    }\n    previousTime = currentTime;\n}\navailability.push({ from: startTime, to: { time: moment(previousTime.time,'hh:mm A').add(15,'minutes').format('hh:mm A'), seconds: previousTime.seconds+900 } });"
+    }
+  },
+  {
+    "smallLabel": "Notifier Evaluation"
+  },
+  {
+    "text": "Each notifier contains a desired court, start/end time, and duration. `timeChecker` evaluates whether any availability block satisfies the notifier's conditions. Notifications are sent only if criteria are met. Given the unsecure nature of the endpoint, results could be incomplete or manipulated if the endpoint changes or is restricted."
+  },
+  {
+    "smallLabel": "Fetching Courts (Unsecure Endpoint)"
+  },
+  {
+    "text": "The `getCourts` function sends a POST request to an unsecure, private scheduling endpoint. The response HTML is parsed with Cheerio to extract `<td>` elements corresponding to enabled court slots. Data is converted into objects containing `time` and `seconds`. Because the endpoint is unsecure, the request could be intercepted, and any automation should avoid exposing credentials or user information."
+  },
+  {
+    "codeSnippet": {
+      "type": "javascript",
+      "data": "Dom('td').each((index, element) => {\n    let courtTranslator = {45:'court 1',46:'court 2',47:'court 3',48:'court 4',49:'court 5',50:'court 6',51:'court 7',162:'court 8'};\n    if (element.attribs?.id?.includes('court') && !element.attribs.class?.toLowerCase().includes('notenabled')) {\n        let parsed = element.attribs.id.split('_');\n        let courtName = courtTranslator[parsed[1]];\n        let time = parsed[3];\n        let timeData = { time: moment(time, 'HH:mm:ss').format('hh:mm A'), seconds: moment(date+time,'MM/DD/YYYYHH:mm:ss').unix() };\n        if (!data[courtName]) data[courtName] = [];\n        data[courtName].push(timeData);\n    }\n});"
+    }
+  },
+  {
+    "smallLabel": "Notification Sending"
+  },
+  {
+    "text": "The `sendNotifier` function is currently a stub that logs the notification. In a production scenario, sensitive information should not be logged in plain text due to the unsecure nature of the endpoint. Secure channels (email, encrypted push) should be used for sending alerts."
+  },
+  {
+    "smallLabel": "Scheduler"
+  },
+  {
+    "text": "After each check, `checkCourts` schedules itself to run again after 10 minutes using `setTimeout`. Continuous monitoring of an unsecure endpoint carries a risk that the data may be manipulated or exposed to third parties."
+  },
+  {
+    "smallLabel": "Security Note"
+  },
+  {
+    "text": "Because this API endpoint is private and unsecure, anyone using this script must ensure they comply with terms of service and respect user privacy. Avoid exposing any authentication tokens, email addresses, or other sensitive data when logging or sending notifications."
+  }
+]

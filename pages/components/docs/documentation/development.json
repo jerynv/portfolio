@@ -1,0 +1,91 @@
+[
+  {
+    "title": "Documentation.js Development Guide",
+    "description": "This documentation provides a deep dive into the architecture, design decisions, and implementation details of the Documentation.js library. It explains how the code transforms structured JSON into a dynamic, accessible documentation interface."
+  },
+  {
+    "label": "1. Core Architecture & The Documentaion Class",
+    "text": "The library is built around two main classes: `Documentaion` (a typo for 'Documentation') and `Docs`. The `Documentaion` class is responsible for parsing a JSON content object and rendering the corresponding HTML elements. It acts as the content renderer."
+  },
+  {
+    "smallLabel": "1.1 The init() Method: JSON Parsing",
+    "text": "The `init(obj)` method is the entry point for rendering content. It expects `obj` to be an array of objects. Each object in this array represents a distinct content block. The method iterates over each object and then over each key within that object, using a `switch` statement to determine which element creation method to call. This design allows for a flexible and ordered content structure defined purely by JSON.",
+    "codeSnippet": {
+      "type": "js",
+      "data": "init(obj) {\n    for (const item of obj) {\n        for (const key in item) {\n            switch (key) {\n                case \"codeSnippet\":\n                    this.createCodeSnippet(item[key].type, item[key].data, item[key].name);\n                    break;\n                case \"text\":\n                    this.createText(item[key]);\n                    break;\n                // ... other cases ...\n                default:\n                    console.log(\"no key found\");\n                    break;\n            }\n        }\n    }\n    this.render();\n}",
+      "name": "JSON Parsing Switch Statement"
+    }
+  },
+  {
+    "smallLabel": "1.2 Element Creation Methods",
+    "text": "For each supported key (e.g., 'title', 'description', 'list'), a dedicated method exists (e.g., `createTitle`, `createDescription`, `createList`). These methods create standard HTML elements, apply specific CSS classes for styling, and inject the content. This modular approach makes the code easy to maintain and extend. Adding a new content type simply requires adding a new case to the switch statement and a new creation method."
+  },
+  {
+    "label": "2. The createCodeSnippet Method: A Deep Dive",
+    "text": "This is the most complex element creation method, featuring syntax highlighting and copy functionality."
+  },
+  {
+    "smallLabel": "2.1 Implementation & Challenges",
+    "text": "The method uses the `js_beautify` library to format the raw code string for consistent indentation. It constructs a container div with a header bar containing the language name and a copy button. The core challenge was managing the copy button's state. The solution was to use `navigator.clipboard.writeText()` for the modern Clipboard API and update the button's text to provide user feedback ('Copy' -> 'Copied' -> 'Copy' after a delay). The `hljs.highlightElement()` function is called to apply syntax highlighting after the `<code>` element is appended to the DOM. A key design decision was to allow for a custom `replacementName` to be displayed instead of the programming language.",
+    "codeSnippet": {
+      "type": "js",
+      "data": "copyButton.addEventListener(\"click\", () => {\n    if (copyButton.textContent === \"Copied\" || copyButton.textContent === \"Once more?\") {\n        copyButton.textContent = \"Once more?\";\n    } else {\n        navigator.clipboard.writeText(formattedCode).then(() => {\n            copyButton.textContent = \"Copied\";\n            setTimeout(() => {\n                copyButton.textContent = \"Copy\";\n            }, 5000);\n        }).catch(err => {\n            console.error(\"Clipboard copy failed:\", err);\n        });\n    }\n});",
+      "name": "Copy Button Logic"
+    }
+  },
+  {
+    "label": "3. The Docs Class: Tree Navigation",
+    "text": "The `Docs` class generates an interactive, nested sidebar navigation tree from a hierarchical JSON object. This is crucial for navigating between different documentation pages."
+  },
+  {
+    "smallLabel": "3.1 Data Structure & The init() Method",
+    "text": "The class is instantiated with a `docs_template` object containing a `tree` property. The `tree` is a nested object where keys represent navigation titles, and the `children` property holds sub-items or pages. The `init()` method loops through this structure, creating a DOM element for each node. For nodes with children, it creates a collapsible container (`.tree-child-container`). A significant challenge was handling nested nodes recursively; this is solved by the `nest()` method, which calls itself to build out infinite levels of depth.",
+    "codeSnippet": {
+      "type": "js",
+      "data": "tree: {\n    \"Documentation\": {\n        children: {\n            intro: { page: \"intro\" },\n            development: { page: \"development\" }\n        }\n    },\n    \"Ios Eq bridge\": {\n        children: {\n            thoughts: { page: \"thoughts\" },\n            usage: { page: \"usage\" }\n        }\n    }\n}",
+      "name": "Example Tree Data Structure"
+    }
+  },
+  {
+    "smallLabel": "3.2 The load() Method & Dynamic Content",
+    "text": "When a user clicks a `.tree-child` element (a page), the `load(parentName, page)` method is called. It constructs a URL path from the provided names, fetches the corresponding JSON file from the `load_path`, and then instructs the `doc_controller` (the `Documentaion` instance) to destroy its current content and render the new JSON. This seamlessly swaps the main content view."
+  },
+  {
+    "smallLabel": "3.3 The forceOpen() Method",
+    "text": "A critical feature for deep linking. On initial load, `docs.forceOpen(\"Documentation\", \"intro\")` is called. This method programmatically traverses the tree DOM, finds the elements corresponding to the given path, opens all necessary parent containers (by adding the `.active` class), and marks the final page as active. It uses `document.evaluate` with XPath for robust element selection, ensuring it works even with complex nested structures. This allows a user to be directed to a specific page via a URL hash or initial state.",
+    "codeSnippet": {
+      "type": "js",
+      "data": "forceOpen(name, page) {\n    const parts = name.split(\"/\").map(p => p.trim().toLowerCase());\n    let currentBase = document;\n    for (let i = 0; i < parts.length; i++) {\n        const part = parts[i];\n        const node = document.evaluate(`.//p[contains(translate(text(), \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\", \"abcdefghijklmnopqrstuvwxyz\"), \"${part}\")]`, currentBase, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n        if (node) {\n            const container = node.parentElement.querySelector(\".tree-child-container, .nested-tree-child-container\");\n            if (container) container.classList.add(\"active\");\n            currentBase = node.parentElement;\n        }\n    }\n    this.load(name, page);\n}",
+      "name": "XPath Traversal in forceOpen"
+    }
+  },
+  {
+    "label": "4. Accessibility & Focus Management",
+    "text": "A major focus of the development process was ensuring keyboard navigation met accessibility standards (WCAG). This was one of the most challenging aspects."
+  },
+  {
+    "smallLabel": "4.1 Design Decisions & Challenges",
+    "text": "The goal was to make the entire tree navigable without a mouse. The challenge was managing the `tabIndex` of numerous dynamic elements. The solution was a multi-step approach:\n1.  All interactive tree elements start with `tabIndex=\"-1\"` (non-tabbable).\n2.  When the user presses 'Enter' or 'Space' on the main `.tree` container, it makes all top-level `.tree-base` elements focusable (`tabIndex=0`) and focuses the first one.\n3.  When a `.tree-base` is focused and opened, it sets `tabIndex=0` on its children, allowing the user to `Tab` into them.\n4.  On `focusout`, it resets children to `tabIndex=\"-1\"` to avoid a bloated and confusing tab order.\nThis creates a contained keyboard trap that mimics the behavior of standard ARIA trees, preventing the user from having to tab through dozens of hidden items."
+  },
+  {
+    "smallLabel": "4.2 Thought Process on Accessibility",
+    "text": "The reasoning behind this complex logic was user experience. A screen reader user or someone who cannot use a mouse must be able to understand the structure and navigate it efficiently. Manually managing focus, while complex, provides a much more predictable and logical navigation flow than relying on the default browser tab order, which would be unusable with a large, collapsible tree. The use of ARIA labels and roles could be a future improvement to enhance screen reader announcements."
+  },
+  {
+    "label": "5. Styling & Layout Challenges",
+    "text": "The CSS works in tandem with the JavaScript to create the final experience. Key challenges were the collapsible animations and the responsive layout."
+  },
+  {
+    "smallLabel": "5.1 CSS & JavaScript Interplay",
+    "text": "The collapsing animation for the `.tree-child-container` is achieved purely with CSS. The JavaScript toggles the `.active` class, which changes `max-height` from `0px` to a very large value (`100000%`). Using `max-height` with a transition is a common CSS trick to animate height without requiring JavaScript to calculate exact dimensions. The rotation of the dropdown icon is also handled by CSS, using the `:has()` selector to detect the active state of the child container and apply a `transform: scaley(-1);` to the icon.",
+    "codeSnippet": {
+      "type": "css",
+      "data": ".tree-child-container {\n    max-height: 0px;\n    overflow: hidden;\n    transition: max-height 0.3s ease-out;\n}\n.tree-child-container.active {\n    max-height: 100000%;\n}\n.tree-base:has(> .tree-child-container.active) > p .icon {\n    transform: scaley(-1);\n}",
+      "name": "CSS for Collapsible Sections"
+    }
+  },
+  {
+    "smallLabel": "5.2 Responsive Design",
+    "text": "The layout uses a flexible two-column design (`.doc` as a flex row) for large screens. The main challenge was ensuring the code snippets and text remained readable on small screens. The media query at the bottom of the CSS switches the layout to a single column (`flex-direction: column`), allows the `.tree` to take the full width and `margin-bottom`, and reduces font sizes for the content to ensure everything fits on screen without horizontal scrolling."
+  }
+]

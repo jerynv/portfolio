@@ -1,0 +1,42 @@
+[
+    {
+        "date": "2024/06/10",
+        "title": "Removed Animations from Header Icons"
+    },
+    {
+        "date": "2024/06/15",
+        "title": "Fixed Login Redirect Bug"
+    },
+    {
+        "date": "2024/07/01",
+        "title": "Updated Dashboard Layout"
+    },
+    {
+        "date": "2024/07/12",
+        "title": "Added Dark Mode Support"
+    },
+    {
+        "date": "2024/07/22",
+        "title": "Improved API Response Times"
+    },
+    {
+        "date": "2024/08/05",
+        "title": "Refactored User Profile Page"
+    },
+    {
+        "date": "2024/08/18",
+        "title": "Introduced Notifications System"
+    },
+    {
+        "date": "2024/09/01",
+        "title": "Optimized Image Uploading"
+    },
+    {
+        "date": "2024/09/10",
+        "title": "Migrated Database to New Cluster"
+    },
+    {
+        "date": "2024/09/25",
+        "title": "Patched Security Vulnerabilities"
+    }
+]

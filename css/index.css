@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 0px 20px 20px 20px;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
 }
 
@@ -14,7 +14,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transform: translateY(-50px);
+    /* transform: translateY(-50px); */
 }
 
 .logo {
@@ -22,7 +22,7 @@ body {
     height: 100px;
     margin-bottom: 40px;
     border-radius: 10px;
-    border: solid 1px rgba(var(--text), 1);
+    /* border: solid 1px rgba(var(--text), 1); */
 }
 
 .hello {
@@ -71,4 +71,19 @@ body {
 
 .links a {
     margin: 0 5px;
+}
+
+/* change flex wrapping when on small screens */
+@media (max-width: 600px) {
+    .welcome_text {
+        text-align: center;
+    }
+
+    .links {
+        flex-wrap: wrap;
+    }
+
+    .links li {
+        margin: 5px 0;
+    }
 }

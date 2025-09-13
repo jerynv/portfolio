@@ -3,6 +3,7 @@ body {
     width: 100%;
     padding: none;
     display: flex;
+    flex-shrink: 0;
 }
 
 main {
@@ -10,7 +11,7 @@ main {
     flex-direction: column;
     align-items: start;
     justify-content: start;
-    box-sizing: content-box;
+    box-sizing: border-box;
     padding-top: 50px;
     font-family: var(--font-body);
     width: 100%;
@@ -82,6 +83,7 @@ main>h1:after {
 
 .tree-base {
     width: 100%;
+    margin-bottom: 4px;
 }
 
 .tree-base p {
@@ -115,6 +117,7 @@ main>h1:after {
 
 .tree-child-container.active {
     max-height: 100000%;
+    padding: 5px;
 }
 
 .tree-child {
@@ -125,6 +128,8 @@ main>h1:after {
     transition: ease-in-out 0.2s;
     width: calc(100% - 10px);
     color: rgba(var(--text), 0.5);
+
+
 }
 
 .tree-child.active {
@@ -245,8 +250,12 @@ main>h1:after {
 
 .code-snippet {
     border: solid 1px rgba(var(--text), 0.2);
-    padding: 5px;
     margin-bottom: 20px;
+    overflow-x: auto;
+    overflow-y: visible;
+
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
     width: 100%;
     max-width: 100%;
 }
@@ -255,10 +264,12 @@ main>h1:after {
     /* disable copying */
     user-select: none;
     display: flex;
+    overscroll-behavior: auto;
     justify-content: space-between;
     align-items: center;
     color: rgba(var(--text), 0.5);
-    padding: 0px 5px 5px 5px;
+    padding: 5px;
+    margin-inline: 5px;
     border-bottom: solid 1px rgba(var(--text), 0.2);
 }
 
@@ -289,10 +300,68 @@ main>h1:after {
     color: rgba(var(--text), 0.6);
 }
 
-
+.doc-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
 pre code.hljs {
     background: none;
     max-width: 100%;
     font-size: .6rem;
+
+    overflow-x: auto;
+    overflow-y: visible;
+
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .output {
+        margin: 0;
+    }
+
+    .doc {
+        flex-direction: column;
+        align-items: start;
+        justify-content: start;
+    }
+
+    .tree {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .tree-child-container div {
+        width: 100%;
+
+    }
+
+    .doc-text {
+        font-size: 1.2rem;
+    }
+
+    .doc-content-text {
+        font-size: .6rem;
+    }
+
+    .description {
+        font-size: .6rem;
+    }
+
+    .small-label {
+        font-size: .8rem;
+    }
+
+    .code-snippet {
+        font-size: .6rem;
+    }
+
+    .doc-content-list {
+        font-size: .6rem;
+    }
 }
