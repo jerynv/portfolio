@@ -9,28 +9,15 @@
 
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/404.css" />
-    <script src="/scripts/index-home.js"></script>
+
+    <script src="scripts/mode.js"></script>
 </head>
 
 <body>
-    <div class="welcome">
-        <img src="portrait.jpg" class="logo" />
-        <h2 class="hello">Hi, I'm Jeryn!</h2>
-        <p class="welcome_text">
-            I'm an aspiring fullstack developer { with an emphasis on <a target="_blank" href="https://go.dev/">GO</a>
-            and
-            <a target="_blank" href="https://bun.sh">Bun JS</a> }, and I really enjoy making things to benefit both my
-            friends and I. I am currently attending my first year at Indiana University as a possible master's candidate in computer science. Welcome to my website! here are some pages to get you
-            started. { note: this site is still under construction and may contain bugs }
-        </p>
-        <ul class="links">
-            <li><a href="/pages/about.html">About</a></li>
-            <li><a href="/pages/contact.html">Contact</a></li>
-            <li><a href="/pages/projects.html">Projects</a></li>
-            <li><a href="/pages/docs.html">Docs</a></li>
-            <li><a href="/pages/sitemap.html">Sitemap</a></li>
-            <li><a href="/pages/journal.html">Journal</a></li>
-        </ul>
+    <div class="error-container">
+        <h1>404 - Page not found</h1>
+        <p>Sorry, the page you are looking for does not exist. Try heading back to the landing page.</p>
+        <button onclick="window.location.href= '/'" class="error-back-button">Landing page</button>
     </div>
 </body>
 
