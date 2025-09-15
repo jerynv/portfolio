@@ -27,7 +27,7 @@
     "label": "Accessibility Matters"
   },
   {
-    "text": "Try exploring the documentation tree with your keyboard. Use Tab, Enter, and Arrow keys to open and navigate sections. This system was carefully designed to ripple focus in and out of nested trees so users can browse without needing a mouse. Please test these features and see how the library keeps documentation truly inclusive."
+    "text": "Try exploring the documentation tree with your keyboard. Use Tab / Shift + Tab, and Enter keys to open and navigate sections. This system was carefully designed to ripple focus in and out of nested trees so users can browse without needing a mouse. Please test these features and see how the library keeps documentation truly inclusive."
   },
   {
     "smallLabel": "Next Steps"

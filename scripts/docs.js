@@ -195,7 +195,8 @@ class Docs {
             const text = document.createElement("p");
             const element_base = document.createElement("div");
             element_base.classList.add("tree-base");
-            element_base.tabIndex = -1;
+            //completly remove the tab inde
+            element_base.removeAttribute("tabindex");
             text.innerHTML = key;
             text.appendChild(icon.firstChild);
             text.addEventListener("click", () => {
@@ -215,7 +216,7 @@ class Docs {
                         //     ".tree-child"
                         // );
                         // for (const child of treeChildren) {
-                        //     child.tabIndex = -1;
+                        //     child.removeAttribute("tabindex");
                         // }
                     }
                 }
@@ -338,7 +339,7 @@ class Docs {
                         } else {
                             //if its not active then focus back on the tree base
                             for (const child of treeChildren) {
-                                child.tabIndex = -1;
+                                child.removeAttribute("tabindex");;
                             }
                             treeBase.focus();
                         }
@@ -353,12 +354,14 @@ class Docs {
 
 
                         //have to check that the related target is not the last child of the current tree base
-                        if (treeBase.contains(e.relatedTarget) && e.relatedTarget !== treeChildren[treeChildren.length - 1]) return; //dont do anything if the user is still focused inside the tree base or its children
+                        if (treeBase.contains(e.relatedTarget)
+
+                        ) return; //dont do anything if the user is still focused inside the tree base or its children
 
                         console.log("setting tabIndex to -1");
                         for (const child of treeChildren) {
 
-                            child.tabIndex = -1;
+                            child.removeAttribute("tabindex");
                         }
                     });
                 }
@@ -370,7 +373,7 @@ class Docs {
             //if the user focuses on the parent element and the target is not a child of the tree element then set all tree-base tabIndex to -1
             if (!e.target.closest(".tree-element")) {
                 for (const treeBase of treeBases) {
-                    treeBase.tabIndex = -1;
+                    treeBase.removeAttribute("tabindex");;
                 }
             }
         });
