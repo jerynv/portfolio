@@ -1,0 +1,93 @@
+body {
+    background: rgba(var(--background), 1);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+h1:after {
+    content: "";
+    display: block;
+    width: 100%;
+    align-self: center;
+    height: var(--height);
+    background: rgba(var(--text), .3);
+    margin: 10px 0;
+    animation: length ease-in-out 1s;
+}
+
+@keyframes length {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-family: var(--font-body);
+
+    max-width: 400px;
+
+    padding: 20px;
+    padding-inline: 52px;
+
+    border: var(--height) solid rgba(var(--text), 0.5);
+}
+
+.error-back-button {
+    background: transparent;
+    color: rgba(var(--text), 1);
+    border: var(--height) solid rgba(var(--text), 1);
+    padding: 10px 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    margin-top: 20px;
+}
+
+p {
+    text-align: center;
+    line-height: 1.5;
+}
+
+.error-back-button:hover {
+    background: rgba(var(--text), .3);
+    color: rgba(var(--background), 1);
+}
+
+@media (max-width: 600px) {
+
+
+
+    .error-container {
+        max-width: 300px;
+        padding-inline: 10px;
+    }
+    .error-back-button {
+        padding: 10px 20px;
+    }
+}
