@@ -1,0 +1,81 @@
+[
+    {
+        "title": "PollChat Security Commitment",
+        "version": "1.2.0"
+    },
+    {
+        "description": "This document demonstrates how I would design and implement a secure PollChat-like app in Go, including pseudo-code examples for authentication, OTP handling, rate-limiting, and data protection."
+    },
+    {
+        "label": "Public Commitment"
+    },
+    {
+        "text": "I build privacy-first, resilient software. From day one, my apps minimize collected data, enforce strong authentication, apply rate-limiting, encrypt data in transit and at rest, and include automated abuse detection. All flows default to deny access and protect user privacy."
+    },
+    {
+        "label": "Authentication Flow Example"
+    },
+    {
+        "smallLabel": "Pseudo-code"
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "data": "import (\n    \"time\"\n    \"github.com/dgrijalva/jwt-go\"\n)\n\nfunc GenerateTokens(userID string) (string, string, error) {\n    accessTokenExp := time.Now().Add(15 * time.Minute)\n    refreshTokenExp := time.Now().Add(7 * 24 * time.Hour)\n\n    accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{\n        \"user_id\": userID,\n        \"exp\": accessTokenExp.Unix(),\n    })\n    refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{\n        \"user_id\": userID,\n        \"exp\": refreshTokenExp.Unix(),\n    })\n\n    at, err := accessToken.SignedString([]byte(ACCESS_SECRET))\n    if err != nil { return \"\", \"\", err }\n    rt, err := refreshToken.SignedString([]byte(REFRESH_SECRET))\n    if err != nil { return \"\", \"\", err }\n\n    StoreRefreshToken(userID, rt) // encrypted storage\n    return at, rt, nil\n} \n\nfunc RequireAuth(tokenStr string) (string, error) {\n    token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {\n        return []byte(ACCESS_SECRET), nil\n    })\n    if err != nil || !token.Valid {\n        return \"\", fmt.Errorf(\"unauthorized\")\n    }\n    claims := token.Claims.(jwt.MapClaims)\n    return claims[\"user_id\"].(string), nil\n}"
+        }
+    },
+    {
+        "label": "OTP / Verification Flow Example"
+    },
+    {
+        "smallLabel": "Pseudo-code"
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "data": "import (\n    \"crypto/rand\"\n    \"fmt\"\n    \"time\"\n)\n\nvar otpStore = map[string]struct{\n    OTP int\n    Expiry time.Time\n}{}\nvar failedAttempts = map[string]int{}\n\nfunc GenerateOTP(userID string) int {\n    otp := int(rand.Int63n(1000000))\n    expiry := time.Now().Add(2 * time.Minute)\n    otpStore[userID] = struct{\n        OTP int\n        Expiry time.Time\n    }{otp, expiry}\n    SendSMS(userID, otp)\n    return otp\n}\n\nfunc VerifyOTP(userID string, otpInput int) bool {\n    if failedAttempts[userID] >= 5 {\n        return false // Too many attempts\n    }\n    stored, ok := otpStore[userID]\n    if !ok || time.Now().After(stored.Expiry) || stored.OTP != otpInput {\n        failedAttempts[userID]++\n        return false\n    }\n    delete(otpStore, userID) // single-use\n    failedAttempts[userID] = 0\n    return true\n}"
+        }
+    },
+    {
+        "label": "Rate Limiting & Abuse Protection"
+    },
+    {
+        "smallLabel": "Pseudo-code"
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "data": "import (\n    \"net/http\"\n    \"sync\"\n    \"time\"\n)\n\nvar rateMap = struct{\n    sync.Mutex\n    data map[string][]time.Time\n}{data: make(map[string][]time.Time)}\n\nfunc RateLimiter(next http.Handler) http.Handler {\n    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n        ip := r.RemoteAddr\n        now := time.Now()\n\n        rateMap.Lock()\n        timestamps := rateMap.data[ip]\n        var recent []time.Time\n        for _, t := range timestamps {\n            if now.Sub(t) < time.Minute {\n                recent = append(recent, t)\n            }\n        }\n        if len(recent) >= 10 {\n            rateMap.Unlock()\n            http.Error(w, \"Too many requests\", http.StatusTooManyRequests)\n            return\n        }\n        recent = append(recent, now)\n        rateMap.data[ip] = recent\n        rateMap.Unlock()\n\n        next.ServeHTTP(w, r)\n    })\n}"
+        }
+    },
+    {
+        "label": "Contact Data Privacy Enforcement"
+    },
+    {
+        "smallLabel": "Pseudo-code"
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "data": "func GetContacts(userID string) []Contact {\n    if !UserConsented(userID) {\n        return []Contact{} // deny access\n    }\n    encryptedContacts := FetchEncryptedContacts(userID)\n    return DecryptContacts(encryptedContacts)\n}"
+        }
+    },
+    {
+        "label": "Logging & Monitoring"
+    },
+    {
+        "smallLabel": "Pseudo-code "
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "data": "func LogAuthEvent(userID, event string) {\n    fmt.Printf(\"[%s] User %s event: %s\\n\", time.Now().Format(time.RFC3339), userID, event)\n}\n\nfunc MonitorSuspiciousActivity(userID string) {\n    // Example: too many OTP requests\n    if failedAttempts[userID] > 3 {\n        AlertSecurityTeam(userID)\n    }\n}"
+        }
+    },
+    {
+        "label": "Engineering Acceptance Criteria"
+    },
+    {
+        "text": "- OTPs are single-use and expire.\n- Rate limits enforced per-IP and per-account.\n- Tokens can be revoked server-side.\n- Sensitive data access requires consent.\n- CI passes static analysis and security tests.\n- Security owner signs off on release."
+    }
+]

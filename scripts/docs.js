@@ -525,9 +525,10 @@ const docs_template = {
         },
         "pollchat hack": {
             children: {
-                "The hack": {
+                "the hack": {
                     page: "thehack",
                 },
+                "fixes": { page: "fixes" },
             },
         },
         "Ios Eq bridge": {
