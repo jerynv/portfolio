@@ -43,9 +43,10 @@ body {
     margin: 20px 0;
 }
 
-.welcome_text {
+p {
     font-family: var(--font-body);
     max-width: 750px;
+    margin-bottom: 10px;
 }
 
 .links {
