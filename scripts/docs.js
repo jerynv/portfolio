@@ -523,6 +523,14 @@ const docs_template = {
                 contribute: { page: "contribute" },
             },
         },
+        "Ios Eq bridge": {
+            children: {
+                images: { page: "images" },
+                thoughts: { page: "thoughts" },
+                development: { page: "development" },
+                usage: { page: "usage" },
+            },
+        },
         "pollchat hack": {
             children: {
                 "the hack": {
@@ -531,13 +539,7 @@ const docs_template = {
                 "fixes": { page: "fixes" },
             },
         },
-        "Ios Eq bridge": {
-            children: {
-                thoughts: { page: "thoughts" },
-                development: { page: "development" },
-                usage: { page: "usage" },
-            },
-        },
+
         "Tennis notifier": {
             children: {
                 development: { page: "development" },

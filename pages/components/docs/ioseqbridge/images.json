@@ -1,0 +1,31 @@
+[
+    {
+        "title": "EQ Bridge Configuration",
+        "version": "1.0.0"
+    },
+    {
+        "description": "The following images and parameters illustrate the EQ settings applied in the EQ Bridge implementation. These configurations specify frequency bands, gain adjustments, and filter types used to achieve tonal balance and clarity."
+    },
+    {
+        "smallLabel": "Overview"
+    },
+    {
+        "text": "The EQ Bridge applies a multi-band equalizer configuration. Each band has a specific frequency, gain, and filter type to shape the sound. Adjustments may vary depending on the source material and desired tonal balance."
+    },
+    {
+        "smallLabel": "Images - From my local music player"
+    },
+    {
+        "image": {
+            "src": "/screen_shots/localmusiceq.png",
+            "size": "100%"
+        }
+    },
+
+    {
+        "smallLabel": "Notes"
+    },
+    {
+        "text": "Adjustments may vary depending on the source material and desired tonal balance. Always test with the audio material to ensure optimal clarity and tonal balance."
+    }
+]
