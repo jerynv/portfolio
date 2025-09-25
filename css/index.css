@@ -9,7 +9,7 @@ body {
 }
 
 
-.welcome{
+.welcome {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -76,15 +76,23 @@ p {
 
 /* change flex wrapping when on small screens */
 @media (max-width: 600px) {
-    .welcome_text {
+    p {
         text-align: center;
+        font-size: .8rem;
     }
 
     .links {
         flex-wrap: wrap;
+        margin-top: 10px;
+        font-size: .8rem;
     }
 
-    .links li {
-        margin: 5px 0;
+    p a {
+        margin: 0px 0;
+        font-size: .8rem;
+    }
+
+    .links li a {
+        font-size: .8rem;
     }
 }
