@@ -3,45 +3,64 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=, initial-scale=1.0" />
-    <title>Welcome!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jeryn Vicari – Full-Stack Developer (Go & Bun JS)</title>
+    <link rel="canonical" href="https://jeryn.me/">
     <link rel="icon" type="image/x-icon" href="j.ico">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/index.css" />
-    <script src="/scripts/index-home.js"></script>
-    <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Jeryn Vicari",
-        "url": "https://jeryn.me/",
-        "sameAs": [
-            "https://www.linkedin.com/in/jerynv",
-            "https://github.com/jerynv"
-        ],
-        "image": "https://jeryn.me/j.jpg",
-        "jobTitle": "Aspiring Full-Stack Developer",
-        "description": "Aspiring full-stack developer with a focus on Go and Bun JS. Passionate about creating tools and projects that challenge me and help me grow as a developer, while also bringing value to others.",
-        "alumniOf": {
-            "@type": "CollegeOrUniversity",
-            "name": "Indiana University Bloomington",
-            "url": "https://luddy.indiana.edu/"
-        }
-    }
-    </script>
-    <meta name="description" content="Welcome to Jeryn's official website. Learn more about me, my projects, and work.">
 
-    <!-- Social sharing -->
-    <meta property="og:title" content="Jeryn – Official Website">
-    <meta property="og:description" content="Discover more about Jeryn, projects, and updates.">
-    <meta property="og:image" content="https://jeryn.me/J.jpg">
+    <meta name="description"
+        content="Official website of Jeryn Vicari, an aspiring full-stack developer specializing in Go and Bun JS. Explore projects, documentation, and updates." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Jeryn Vicari – Full-Stack Developer (Go & Bun JS)">
+    <meta property="og:description"
+        content="Discover more about Jeryn Vicari — an aspiring full-stack developer focused on Go and Bun JS.">
+    <meta property="og:image" content="https://jeryn.me/j.jpg">
     <meta property="og:url" content="https://jeryn.me/">
+    <meta property="og:site_name" content="Jeryn Vicari">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Jeryn Vicari – Full-Stack Developer">
+    <meta name="twitter:description"
+        content="Welcome to the official website of Jeryn Vicari, full-stack developer specializing in Go and Bun JS.">
+    <meta name="twitter:image" content="https://jeryn.me/j.jpg">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jeryn Vicari",
+      "url": "https://jeryn.me/",
+      "sameAs": [
+        "https://www.linkedin.com/in/jerynv",
+        "https://github.com/jerynv"
+      ],
+      "image": "https://jeryn.me/j.jpg",
+      "jobTitle": "Aspiring Full-Stack Developer",
+      "description": "Aspiring full-stack developer with a focus on Go and Bun JS. Passionate about creating tools and projects that challenge me and help me grow as a developer, while also bringing value to others.",
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Indiana University Bloomington",
+        "url": "https://luddy.indiana.edu/"
+      }
+    }
+  </script>
+
+    <link rel="preload" href="portrait.jpg" as="image" />
+
 </head>
 
 <body>
     <div class="welcome">
+        <img src="portrait.jpg" class="logo oes" alt="Portrait of Jeryn Vicari" />
+
         <img src="portrait.jpg" class="logo" />
-        <h2 class="hello">Hi, I'm Jeryn!</h2>
+        <h1 class="hello">Hi, I'm Jeryn!</h1>
         <p>
             Hello! I’m an aspiring full-stack developer with a focus on
             <a target="_blank" href="https://go.dev/">Go</a> and

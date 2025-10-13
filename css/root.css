@@ -181,6 +181,10 @@ header svg:active {
     outline: none !important;
 }
 
+.oes {
+    display: none;
+}
+
 @media (max-width: 520px) {
     body {
         padding: 0px;
