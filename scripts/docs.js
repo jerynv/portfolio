@@ -516,6 +516,13 @@ class Docs {
 
 const docs_template = {
     tree: {
+        "GDN": {
+            children: {
+                GDN: { page: "gdn" },
+                json: { page: "json" },
+                "json fix": { page: "jsonfix" },
+            },
+        },
         "Documentation": {
             children: {
                 intro: { page: "intro" },
@@ -554,4 +561,14 @@ const docController = new Documentaion(".output");
 const docs = new Docs(docs_template, ".tree", docController);
 docs.init();
 docs.render();
-docs.forceOpen("Documentation", "intro");
+
+// get the url parameters
+const urlParams = new URLSearchParams(window.location.search);
+const docParam = urlParams.get("doc");
+const pageParam = urlParams.get("page");
+
+if (docParam && pageParam) {
+    docs.forceOpen(docParam, pageParam);
+} else {
+    docs.forceOpen("GDN", "GDN");
+}

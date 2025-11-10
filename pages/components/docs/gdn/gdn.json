@@ -1,0 +1,108 @@
+[
+    {
+        "title": "GDN - Go Data Normalization"
+    },
+    {
+        "smallLabel": "Subsystem of Quantarra | Started November 5, 2025"
+    },
+    {
+        "description": "GDN (Go Data Normalization) is the structural core that Quantarra uses to take raw, chaotic data and convert it into a deterministic schema. It defines how data is formatted, validated, and saved - acting as the middle layer between ingestion and intelligent computation."
+    },
+    {
+        "smallLabel": "My Thought Process"
+    },
+    {
+        "text": "When I started designing Quantarra, I knew every upstream system would produce inconsistent formats. APIs, logs, financial feeds - none of it would match. The goal for GDN was to remove that inconsistency at the root level. I wanted a universal representation of data that every layer could depend on - from analytics to visualization."
+    },
+    {
+        "text": "GDN was built to act as a neutralizer - it doesn't care about the data source, only about its final shape. It ensures every piece of data is transformed into something predictable, typed, and queryable."
+    },
+    {
+        "smallLabel": "Design Principles"
+    },
+    {
+        "list": [
+            "Structured normalization - every dataset follows a uniform schema.",
+            "Resilient state recovery - crashes or shutdowns don’t corrupt active processing.",
+            "Format adaptability - JSON for smaller files, Parquet for larger ones.",
+            "Deterministic outputs - identical structures across display and backend systems."
+        ]
+    },
+    {
+        "smallLabel": "Schema Model"
+    },
+    {
+        "text": "All normalized datasets share the same fundamental structure, allowing the UI, storage, and processing layers to interact with them interchangeably."
+    },
+    {
+        "codeSnippet": {
+            "type": "json",
+            "name": "defaultSchema",
+            "data": "{\n  \"schema\": {\n    \"columns\": [\n      { \"name\": \"timestamp\", \"type\": \"datetime\" },\n      { \"name\": \"price\", \"type\": \"float\" },\n      { \"name\": \"volume\", \"type\": \"int\" }\n    ]\n  },\n  \"rows\": [\n    [1736030110000, 129.33, 20123],\n    [1736030170000, 129.42, 18762]\n  ]\n}"
+        }
+    },
+    {
+        "smallLabel": "Architecture"
+    },
+    {
+        "text": "GDN operates as a layered system:"
+    },
+    {
+        "list": [
+            "Normalization Core (Controller) - parses JSON, NDJSON, or GeoJSON, auto-generating schema definitions and column mappings.",
+            "Output Layer - decides between JSON or Parquet storage based on dataset size thresholds.",
+            "Recovery Logic - verifies processing integrity on startup and reverts any incomplete sessions to pending states.",
+            "Integration Hooks - communicates back to the Node.js database layer to update dataset status and metadata."
+        ]
+    },
+    {
+        "smallLabel": "Handling Failures"
+    },
+    {
+        "text": "If the server goes down mid-processing, GDN will re-scan the database on startup. Any dataset marked as 'processing' gets reverted to 'pending' if the raw and parsed files still exist. This prevents orphaned states and ensures consistency across sessions."
+    },
+    {
+        "smallLabel": "File Logic"
+    },
+    {
+        "list": [
+            ".json - used for all datasets under 100 MB.",
+            ".parquet - used for larger files for better compression and columnar access.",
+            "Both follow identical schema layout for consistency across client and backend."
+        ]
+    },
+    {
+        "smallLabel": "Integration Point"
+    },
+    {
+        "text": "The Go layer triggers a database update through the editDataset() method in databaseDB.js once normalization is complete. This keeps the dataset lifecycle synchronized between Quantarra’s Go-based processing layer and the Node.js control layer."
+    },
+    {
+        "smallLabel": "System Goals"
+    },
+    {
+        "list": [
+            "Define a universal schema for all data types.",
+            "Support incremental and partial normalization.",
+            "Enable NDJSON and GeoJSON as first-class inputs.",
+            "Provide a unified format for API and UI interaction."
+        ]
+    },
+    {
+        "smallLabel": "Future Work"
+    },
+    {
+        "list": [
+            "Schema inference improvements for nested structures.",
+            "Incremental normalization checkpoints for large files.",
+            "NDJSON streaming output to reduce memory footprint.",
+            "Automated visual documentation linking into Quantarra’s dev portal."
+        ]
+    },
+    {
+        "smallLabel": "Closing Thought"
+    },
+    {
+        "text": "GDN is the foundation that makes Quantarra reliable. Without it, every other layer - from analysis to rendering - would break under inconsistency. The system’s purpose is simple: take chaos and make it measurable, reproducible, and uniform. GDN isn’t just normalization - it’s the structural logic that allows Quantarra to reason about data at scale."
+    }
+]

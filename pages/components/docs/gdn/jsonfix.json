@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Review and Improvement Plan"
+  },
+  {
+    "description": "This document outlines functional gaps, design issues, and recommended improvements to strengthen maintainability, accuracy, and scalability of the parser."
+  },
+  {
+    "smallLabel": "Current Functionality Summary"
+  },
+  {
+    "list": [
+      "Dynamic routing between JSON and Parquet parsing based on file size threshold.",
+      "Recursive normalization of nested data structures.",
+      "Support for JSON arrays, single objects, and NDJSON inputs.",
+      "Type inference system providing consistent schema representation.",
+      "S3 interaction via signed URLs and range-based downloads."
+    ]
+  },
+  {
+    "smallLabel": "Incomplete Implementations"
+  },
+  {
+    "list": [
+      "The function `ParseJsonToParquet` is defined but contains no implementation for Parquet conversion.",
+      "In `parseNDJSON`, nested objects are not properly normalized; they are represented by static placeholders.",
+      "Column alignment logic may break when rows have mismatched or new keys appearing after initial schema creation.",
+      "Channel closing order in `ParseJsonToJson` may lead to premature closure or blocking behavior under some conditions."
+    ]
+  },
+  {
+    "smallLabel": "Recommended Structural Enhancements"
+  },
+  {
+    "list": [
+      "Implement a streaming parser for both JSON and NDJSON to avoid loading entire data into memory at once.",
+      "Refactor normalization to maintain schema consistency dynamically across rows.",
+      "Make the 50 MB cutoff value configurable through environment variables or runtime arguments.",
+      "Use buffered uploads to improve performance during S3 PUT requests.",
+      "Introduce error recovery and partial upload continuation mechanisms."
+    ]
+  },
+  {
+    "smallLabel": "Testing and Validation Recommendations"
+  },
+  {
+    "list": [
+      "Add unit tests for inferType, detectJSONType, normalizeJSON, and parseNDJSON with diverse input samples.",
+      "Include integration tests for S3 I/O, validating both small and large file workflows.",
+      "Simulate malformed or partial NDJSON input to verify scanner error handling.",
+      "Benchmark normalization performance on nested and irregular JSON documents."
+    ]
+  },
+  {
+    "smallLabel": "Future Development Notes"
+  },
+  {
+    "list": [
+      "Integrate Apache Arrow or equivalent library for Parquet conversion in `ParseJsonToParquet`.",
+      "Expand type inference to include date, null, and mixed-type field support.",
+      "Refactor schema definition to use maps instead of slices for O(1) key lookup.",
+      "Implement incremental upload progress reporting for long-running operations."
+    ]
+  }
+]
