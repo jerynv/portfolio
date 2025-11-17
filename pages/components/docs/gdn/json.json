@@ -3,97 +3,97 @@
     "title": "Go JSON Parsing System"
   },
   {
-    "description": "This module is a scalable JSON parsing system implemented in Go. It is designed to process structured and semi-structured JSON data, including standard JSON, NDJSON (newline-delimited JSON), and deeply nested objects. It includes logic for type inference, schema normalization, S3 I/O handling, and upload management. For large datasets, it provides a placeholder for conversion to Parquet format."
+    "description": "This module is a scalable JSON parsing system implemented in Go. It processes structured and semi-structured JSON inputs, supporting standard JSON (objects/arrays), NDJSON, and multi-layer nested data. It includes dynamic schema inference, recursive normalization, nested table handling, NDJSON parsing, S3 streaming I/O, and upload workflows. Large files (>10 GB) are routed toward a Parquet conversion pipeline (currently stubbed)."
   },
   {
     "smallLabel": "1. Controller Layer"
   },
   {
-    "description": "The Controller function determines the parsing method based on the size of the input file. Files smaller than 50 MB are parsed directly into normalized JSON; larger files are delegated to Parquet conversion. This allows scalable handling of different data volumes."
+    "description": "The Controller function chooses between JSON-normalization mode and Parquet mode based on file size. Files ≥10 GB are routed to Parquet conversion; smaller files are fully normalized into a custom line-delimited JSON format and uploaded to S3."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "func Controller(inputPath string, outputPath string, s3Client *utils.S3Client, bucket string, size uint64, callback func(), warn func(int)) error {\n    if size > 50*1024*1024 {\n        return ParseJsonToParquet(inputPath, outputPath, s3Client, bucket, size, callback, warn)\n    } else {\n        return ParseJsonToJson(inputPath, outputPath, s3Client, bucket, size, callback, warn)\n    }\n}"
+      "data": "func Controller(inputPath string, outputPath string, s3Client *utils.S3Client, bucket string, size uint64, callback func(), warn func(int)) error {\n    if size > 10*1000*1024*1024 {\n        return ParseJsonToParquet(inputPath, outputPath, s3Client, bucket, size, callback, warn)\n    } else {\n        return ParseJsonToJson(inputPath, outputPath, s3Client, bucket, size, callback, warn)\n    }\n}"
     }
   },
   {
     "smallLabel": "2. Data Structures"
   },
   {
-    "description": "The parser defines two main data structures for normalized output. `Column` represents a named field with a detected data type, and `Table` represents a normalized dataset with a defined schema and corresponding rows."
+    "description": "The parser uses explicit Schema and Column structures to represent normalized tables. Nested tables are supported via recursive `Schema` references. Rows are represented as a two-dimensional slice: each row is a slice of arbitrary values, including potentially nested subtables."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "type Column struct {\n    Name string `json:\"name\"`\n    Type string `json:\"type\"`\n}\n\ntype Table struct {\n    Schema struct {\n        Columns []Column `json:\"columns\"`\n    } `json:\"schema\"`\n    Rows [][]interface{} `json:\"rows\"`\n}"
+      "data": "type Column struct {\n    Name   string  `json:\"name\"`\n    Type   string  `json:\"type\"` // int, float, string, bool, table\n    Schema *Schema `json:\"schema,omitempty\"`\n}\n\ntype Table struct {\n    Schema Schema `json:\"schema\"`\n    Rows   Row    `json:\"rows\"`\n}\n\ntype Schema struct {\n    Columns []Column `json:\"columns\"`\n}\n\ntype Row [][]interface{}"
     }
   },
   {
     "smallLabel": "3. Type Inference"
   },
   {
-    "description": "The `inferType` function performs runtime reflection-based type inference for JSON values. It maps Go primitives and composite types into a reduced set of normalized categories: int, float, string, bool, and table."
+    "description": "`inferType` inspects Go values dynamically and maps them into normalized types. Composite objects (maps and arrays) are treated as `table` and recursively expanded by `normalizeJSON`."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "func inferType(value interface{}) string {\n    switch value.(type) {\n    case int, int32, int64:\n        return \"int\"\n    case float32, float64:\n        return \"float\"\n    case string:\n        return \"string\"\n    case bool:\n        return \"bool\"\n    case map[string]interface{}, []interface{}:\n        return \"table\"\n    default:\n        return \"string\"\n    }\n}"
+      "data": "func inferType(value interface{}) string {\n    switch v := value.(type) {\n    case float64:\n        // JSON numbers become float64 by default\n        if v == float64(int(v)) {\n            return \"int\"\n        }\n        return \"float\"\n    case string:\n        return \"string\"\n    case bool:\n        return \"bool\"\n    case map[string]interface{}:\n        return \"table\"\n    case []interface{}:\n        return \"array\"\n    default:\n        return \"string\"\n    }\n}"
     }
   },
   {
     "smallLabel": "4. JSON Normalization"
   },
   {
-    "description": "The `normalizeJSON` function recursively transforms any JSON structure into a consistent tabular format. It constructs columns dynamically based on observed keys, handling nested objects or arrays by embedding normalized subtables. This provides uniformity across JSON records that differ in structure."
+    "description": "`normalizeJSON` converts any JSON structure (object, array, scalar) into a tabular representation. It grows the schema dynamically, supports recursive nested subtables, and produces a Row structure matching the finalized column ordering. Depth information is printed for debugging."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "func normalizeJSON(data interface{}) Table {\n    table := Table{}\n    switch val := data.(type) {\n    case []interface{}:\n        for _, elem := range val {\n            row := make([]interface{}, len(table.Schema.Columns))\n            switch v := elem.(type) {\n            case map[string]interface{}:\n                for key, value := range v {\n                    found := false\n                    it := 0\n                    for _, col := range table.Schema.Columns {\n                        if col.Name == key {\n                            found = true\n                            break\n                        }\n                        it++\n                    }\n                    if !found {\n                        table.Schema.Columns = append(table.Schema.Columns, Column{Name: key, Type: inferType(value)})\n                    }\n                    if len(row) < len(table.Schema.Columns) {\n                        row = append(row, make([]interface{}, len(table.Schema.Columns)-len(row))...)\n                    }\n                    switch value.(type) {\n                    case map[string]interface{}, []interface{}:\n                        row[it] = normalizeJSON(value)\n                    default:\n                        row[it] = value\n                    }\n                }\n            default:\n                if len(table.Schema.Columns) == 0 {\n                    table.Schema.Columns = append(table.Schema.Columns, Column{Name: \"value\", Type: inferType(v)})\n                }\n                row = append(row, v)\n            }\n            table.Rows = append(table.Rows, row)\n        }\n    case map[string]interface{}:\n        row := []interface{}{}\n        for key, value := range val {\n            table.Schema.Columns = append(table.Schema.Columns, Column{Name: key, Type: inferType(value)})\n            switch value.(type) {\n            case map[string]interface{}, []interface{}:\n                row = append(row, normalizeJSON(value))\n            default:\n                row = append(row, value)\n            }\n        }\n        table.Rows = append(table.Rows, row)\n    default:\n        table.Schema.Columns = append(table.Schema.Columns, Column{Name: \"value\", Type: inferType(val)})\n        table.Rows = append(table.Rows, []interface{}{val})\n    }\n    return table\n}"
+      "data": "func normalizeJSON(data interface{}, TableEditorPointer *Schema, depth uint) Row {\n    PassedRows := Row{}\n    switch val := data.(type) {\n    case []interface{}:\n        ... // Recursively normalizes array elements\n    case map[string]interface{}:\n        ... // Normalizes object fields into row entries\n    default:\n        ... // Handles bare scalars\n    }\n    return PassedRows\n}"
     }
   },
   {
     "smallLabel": "5. NDJSON Parsing"
   },
   {
-    "description": "The `parseNDJSON` function processes newline-delimited JSON. Each line is treated as an independent JSON object, and each is merged into a shared schema. Currently, nested JSON fields are represented by placeholders and should be normalized recursively in future revisions."
+    "description": "`parseNDJSON` reads the file line by line and treats each line as a standalone JSON object. It integrates each object into the shared schema and performs recursive normalization for nested structures via `normalizeJSON`. NDJSON rows are appended into a common Row collection."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "func parseNDJSON(data []byte) (Table, error) {\n    parsed := Table{}\n    scanner := bufio.NewScanner(bytes.NewReader(data))\n    for scanner.Scan() {\n        line := scanner.Bytes()\n        var obj interface{}\n        if err := json.Unmarshal(line, &obj); err != nil {\n            return Table{}, fmt.Errorf(\"failed to parse NDJSON line: %v\", err)\n        }\n        switch v := obj.(type) {\n        case map[string]interface{}:\n            row := make([]interface{}, len(parsed.Schema.Columns))\n            for key, value := range v {\n                found := false\n                it := 0\n                for _, col := range parsed.Schema.Columns {\n                    if col.Name == key {\n                        found = true\n                        break\n                    }\n                    it++\n                }\n                if !found {\n                    parsed.Schema.Columns = append(parsed.Schema.Columns, Column{Name: key, Type: inferType(value)})\n                }\n                if len(row) < len(parsed.Schema.Columns) {\n                    row = append(row, make([]interface{}, len(parsed.Schema.Columns)-len(row))...)\n                }\n                switch v := value.(type) {\n                case map[string]interface{}:\n                    row[it] = \"normalizeJSON(value)\" // Placeholder, should call normalizeJSON\n                default:\n                    row[it] = v\n                }\n            }\n            parsed.Rows = append(parsed.Rows, row)\n        default:\n            return Table{}, fmt.Errorf(\"expected JSON object in NDJSON, got %T\", v)\n        }\n    }\n    if err := scanner.Err(); err != nil {\n        return Table{}, fmt.Errorf(\"error reading NDJSON data: %v\", err)\n    }\n    return parsed, nil\n}"
+      "data": "func parseNDJSON(data []byte, TableEditorPointer *Schema) Row {\n    parsed := Row{}\n    scanner := bufio.NewScanner(bytes.NewReader(data))\n    for scanner.Scan() {\n        var obj interface{}\n        json.Unmarshal(scanner.Bytes(), &obj)\n        switch v := obj.(type) {\n        case map[string]interface{}:\n            // Per-line schema update + recursive normalization\n        default:\n            return Row{}\n        }\n    }\n    return parsed\n}"
     }
   },
   {
     "smallLabel": "6. JSON Type Detection"
   },
   {
-    "description": "The `detectJSONType` function determines whether the input is an array, object, or NDJSON. It inspects leading characters and newline patterns. This heuristic is functional but may incorrectly identify compact or minified JSON objects that contain line breaks."
+    "description": "`detectJSONType` determines whether the data is array JSON, object JSON, or NDJSON by inspecting the first byte and the presence of `}\n{` patterns."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "func detectJSONType(data []byte) string {\n    data = bytes.TrimSpace(data)\n    if len(data) == 0 {\n        return \"unknown\"\n    }\n    if data[0] == '[' {\n        return \"array\"\n    } else if data[0] == '{' {\n        if bytes.Contains(data, []byte(\"}\\n{\")) {\n            return \"ndjson\"\n        }\n        return \"object\"\n    }\n    return \"unknown\"\n}"
+      "data": "func detectJSONType(data []byte) string {\n    data = bytes.TrimSpace(data)\n    if len(data) == 0 {\n        return \"unknown\"\n    }\n    if data[0] == '[' {\n        return \"array\"\n    }\n    if data[0] == '{' {\n        if bytes.Contains(data, []byte(\"}\\n{\")) {\n            return \"ndjson\"\n        }\n        return \"object\"\n    }\n    return \"unknown\"\n}"
     }
   },
   {
     "smallLabel": "7. JSON Parsing and Upload Workflow"
   },
   {
-    "description": "The `ParseJsonToJson` function orchestrates the end-to-end data flow. It downloads data from S3 in 5 MB chunks, concatenates them, detects JSON type, normalizes data into a tabular schema, and uploads the result as normalized JSON back to S3 using a signed URL. The process is synchronous, awaiting completion of each chunk fetch before continuing."
+    "description": "`ParseJsonToJson` streams the input from S3 in 5 MB chunks, reconstructs the full file, detects JSON type, normalizes the data into tabular form, and uploads it to a signed S3 URL using a custom `.tarrajson` output format. Rows are line-numbered and newline-delimited for efficient streaming and partial reads."
   },
   {
     "codeSnippet": {
       "type": "go",
       "name": "go",
-      "data": "// Simplified view\nfunc ParseJsonToJson(inputPath string, outputPath string, s3Client *utils.S3Client, bucket string, size uint64, callback func(), warn func(int)) error {\n    const CHUNK_SIZE = 5 * 1024 * 1024\n    // 1. Download file in chunks\n    // 2. Detect JSON type\n    // 3. Normalize structure\n    // 4. Upload normalized result\n    // 5. Trigger callback\n    return nil\n}"
+      "data": "func ParseJsonToJson(inputPath string, outputPath string, s3Client *utils.S3Client, bucket string, size uint64, callback func(), warn func(int)) error {\n    const CHUNK_SIZE = 5 * 1024 * 1024 // 5 MB\n    downloadedData := []byte{}\n    for offset := uint64(0); offset < size; offset += CHUNK_SIZE {\n        end := min((offset+CHUNK_SIZE)-1, size-1)\n        var wg sync.WaitGroup\n        resultCh := make(chan []byte, 1)\n        errCh := make(chan error, 1)\n        wg.Add(1)\n        go func(offset, end uint64) {\n            defer wg.Done()\n            res, err := s3Client.GetObjectBytesFromRange(inputPath, bucket, uint(offset), uint(end), nil)\n            if err != nil {\n                errCh <- err\n                return\n            }\n            resultCh <- res\n        }(offset, end)\n        wg.Wait()\n        close(resultCh)\n        close(errCh)\n        if err := <-errCh; err != nil {\n            return err\n        }\n        if chunk, ok := <-resultCh; ok {\n            downloadedData = append(downloadedData, chunk...)\n            fmt.Println(\"Downloaded chunk:\", offset, \"to\", end)\n        }\n    }\n    fmt.Println(\"Total bytes downloaded:\", len(downloadedData))\n    var table Table\n    jsonType := detectJSONType(downloadedData)\n    fmt.Println(\"Detected JSON type:\", jsonType)\n    switch jsonType {\n    case \"array\", \"object\":\n        var raw interface{}\n        if err := json.Unmarshal(downloadedData, &raw); err != nil {\n            return err\n        }\n        table.Rows = normalizeJSON(raw, &table.Schema, 0)\n    case \"ndjson\":\n        table.Rows = parseNDJSON(downloadedData, &table.Schema)\n    default:\n        return fmt.Errorf(\"unknown JSON type\")\n    }\n    var fileToSend []byte\n    schemaBytes, _ := json.Marshal(table.Schema)\n    fileToSend = append(fileToSend, schemaBytes...)\n    fileToSend = append(fileToSend, '\\n')\n    lineNumber := uint64(1)\n    totalLines := uint64(len(table.Rows))\n    for len(table.Rows) > 0 {\n        row := table.Rows[0]\n        table.Rows[0] = nil\n        table.Rows = table.Rows[1:]\n        jsonBytes, _ := json.Marshal(row)\n        rowBytes := append([]byte(strconv.FormatUint(lineNumber, 10)), jsonBytes...)\n        fileToSend = append(fileToSend, rowBytes...)\n        if lineNumber < totalLines {\n            fileToSend = append(fileToSend, '\\n')\n        }\n        lineNumber++\n    }\n    singedObjectURL, err := s3Client.GenUploadURL(bucket, outputPath+\".tarrajson\", 3600)\n    if err != nil {\n        return fmt.Errorf(\"failed to generate signed URL: %v\", err)\n    }\n    req, err := http.NewRequest(\"PUT\", singedObjectURL, bytes.NewReader(fileToSend))\n    if err != nil {\n        return fmt.Errorf(\"failed to create PUT request: %v\", err)\n    }\n    req.Header.Set(\"Content-Type\", \"application/x-tarrajson\")\n    req.ContentLength = int64(len(fileToSend))\n    client := &http.Client{}\n    resp, err := client.Do(req)\n    if err != nil {\n        return fmt.Errorf(\"failed to upload normalized JSON: %v\", err)\n    }\n    defer resp.Body.Close()\n    if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {\n        return fmt.Errorf(\"upload failed with status: %s\", resp.Status)\n    }\n    fmt.Println(\"Normalized JSON uploaded successfully to\", outputPath)\n    callback()\n    return nil\n}"
     }
   }
 ]
