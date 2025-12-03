@@ -49,24 +49,18 @@
     },
     {
         "list": [
-            "Normalization Core (Controller) - parses JSON, NDJSON, or GeoJSON, auto-generating schema definitions and column mappings.",
+            "Data Normalization Core (DNC) - orchestrates the end-to-end processing of datasets.",
             "Output Layer - decides between JSON or Parquet storage based on dataset size thresholds.",
             "Recovery Logic - verifies processing integrity on startup and reverts any incomplete sessions to pending states.",
             "Integration Hooks - communicates back to the Node.js database layer to update dataset status and metadata."
         ]
     },
     {
-        "smallLabel": "Handling Failures"
-    },
-    {
-        "text": "If the server goes down mid-processing, GDN will re-scan the database on startup. Any dataset marked as 'processing' gets reverted to 'pending' if the raw and parsed files still exist. This prevents orphaned states and ensures consistency across sessions."
-    },
-    {
         "smallLabel": "File Logic"
     },
     {
         "list": [
-            ".json - used for all datasets under 100 MB.",
+            ".json - used for all datasets under a predefined threshold",
             ".parquet - used for larger files for better compression and columnar access.",
             "Both follow identical schema layout for consistency across client and backend."
         ]
@@ -75,7 +69,7 @@
         "smallLabel": "Integration Point"
     },
     {
-        "text": "The Go layer triggers a database update through the editDataset() method in databaseDB.js once normalization is complete. This keeps the dataset lifecycle synchronized between Quantarra’s Go-based processing layer and the Node.js control layer."
+        "text": "The Go layer triggers a database update through docker network connected to the private backend endpoints editDataset method, once normalization is starting, failing, or completing. This keeps the dataset lifecycle synchronized between Quantarra’s Go-based processing layer and the Node.js backend layer."
     },
     {
         "smallLabel": "System Goals"
@@ -84,7 +78,7 @@
         "list": [
             "Define a universal schema for all data types.",
             "Support incremental and partial normalization.",
-            "Enable NDJSON and GeoJSON as first-class inputs.",
+            "Ensure robust recovery from interruptions.",
             "Provide a unified format for API and UI interaction."
         ]
     },
@@ -93,10 +87,9 @@
     },
     {
         "list": [
-            "Schema inference improvements for nested structures.",
             "Incremental normalization checkpoints for large files.",
-            "NDJSON streaming output to reduce memory footprint.",
-            "Automated visual documentation linking into Quantarra’s dev portal."
+            "Bucket streaming for memory-efficient processing of massive datasets.",
+            "Enhanced schema versioning for backward compatibility."
         ]
     },
     {

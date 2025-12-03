@@ -1,10 +1,10 @@
 [
   {
-    "title": "Tennis Court Notifier (Private Endpoint)",
+    "title": "Tennis Court Notifier",
     "version": "1.0.0"
   },
   {
-    "description": "This Bun.js module monitors tennis court availability from Club Automation's scheduling system and notifies users when desired time slots become available. Note that the endpoint being accessed is not public and is unsecure, meaning that anyone with knowledge of the endpoint and request parameters can access sensitive scheduling information. Use of this module should respect the service's terms of use and user privacy."
+    "description": "This Bun.js module monitors tennis court availability from Club Automation's scheduling system and notifies users when desired time slots become available. Note that the club automation endpoint being accessed is not public and is unsecure, meaning that anyone with knowledge of the endpoint and request parameters can access sensitive scheduling information. Use of this module should respect the service's terms of use and user privacy."
   },
   {
     "smallLabel": "Initialization"

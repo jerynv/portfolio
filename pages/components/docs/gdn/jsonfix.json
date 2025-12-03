@@ -23,8 +23,6 @@
   {
     "list": [
       "The function `ParseJsonToParquet` is defined but contains no implementation for Parquet conversion.",
-      "In `parseNDJSON`, nested objects are not properly normalized; they are represented by static placeholders.",
-      "Column alignment logic may break when rows have mismatched or new keys appearing after initial schema creation.",
       "Channel closing order in `ParseJsonToJson` may lead to premature closure or blocking behavior under some conditions."
     ]
   },
@@ -35,7 +33,6 @@
     "list": [
       "Implement a streaming parser for both JSON and NDJSON to avoid loading entire data into memory at once.",
       "Refactor normalization to maintain schema consistency dynamically across rows.",
-      "Make the 50 MB cutoff value configurable through environment variables or runtime arguments.",
       "Use buffered uploads to improve performance during S3 PUT requests.",
       "Introduce error recovery and partial upload continuation mechanisms."
     ]

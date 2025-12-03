@@ -459,6 +459,9 @@ class Docs {
         }
         this.doc_controller.destroy();
         this.doc_controller.init(response);
+        // replace the url parameters with the current doc and page without reloading the page
+        const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?doc=${encodeURIComponent(parentName)}&page=${encodeURIComponent(page)}`;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
     }
 
     forceOpen(name, page) {
@@ -516,18 +519,18 @@ class Docs {
 
 const docs_template = {
     tree: {
-        "GDN": {
-            children: {
-                GDN: { page: "gdn" },
-                json: { page: "json" },
-                "json fix": { page: "jsonfix" },
-            },
-        },
         "Documentation": {
             children: {
                 intro: { page: "intro" },
                 development: { page: "development" },
                 contribute: { page: "contribute" },
+            },
+        },
+        "GDN": {
+            children: {
+                GDN: { page: "gdn" },
+                json: { page: "json" },
+                "json fix": { page: "jsonfix" },
             },
         },
         "Ios Eq bridge": {
@@ -569,6 +572,9 @@ const pageParam = urlParams.get("page");
 
 if (docParam && pageParam) {
     docs.forceOpen(docParam, pageParam);
+    // remove the url parameters without reloading the page
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({ path: newUrl }, '', newUrl);
 } else {
-    docs.forceOpen("GDN", "GDN");
+    docs.forceOpen("Documentation", "intro");
 }
