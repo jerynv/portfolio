@@ -535,10 +535,10 @@ const docs_template = {
         },
         "Ios Eq bridge": {
             children: {
-                images: { page: "images" },
                 thoughts: { page: "thoughts" },
                 development: { page: "development" },
                 usage: { page: "usage" },
+                images: { page: "images" },
             },
         },
         "pollchat hack": {

@@ -4,13 +4,13 @@
         "version": "1.2.0"
     },
     {
-        "description": "This document demonstrates how I would design and implement a secure PollChat-like app in Go, including pseudo-code examples for authentication, OTP handling, rate-limiting, and data protection."
+        "description": "This document outlines how I would design and implement a secure PollChat-style application in Go, including pseudo-code examples for authentication, OTP handling, rate-limiting, and data protection."
     },
     {
         "label": "Public Commitment"
     },
     {
-        "text": "I build privacy-first, resilient software. From day one, my apps minimize collected data, enforce strong authentication, apply rate-limiting, encrypt data in transit and at rest, and include automated abuse detection. All flows default to deny access and protect user privacy."
+        "text": "I build privacy-first, resilient software. From day one, my applications minimize collected data, enforce strong authentication, apply rate-limiting, encrypt data in transit and at rest, and include automated abuse detection. All flows default to denying access and protecting user privacy."
     },
     {
         "label": "Authentication Flow Example"
@@ -76,6 +76,13 @@
         "label": "Engineering Acceptance Criteria"
     },
     {
-        "text": "- OTPs are single-use and expire.\n- Rate limits enforced per-IP and per-account.\n- Tokens can be revoked server-side.\n- Sensitive data access requires consent.\n- CI passes static analysis and security tests.\n- Security owner signs off on release."
+        "list": [
+            "OTPs are single-use and expire.",
+            "Rate limits are enforced per-IP and per-account.",
+            "Tokens can be revoked server-side.",
+            "Sensitive data access requires explicit consent.",
+            "CI must pass static analysis and security tests.",
+            "A security owner must sign off on each release."
+        ]
     }
 ]
