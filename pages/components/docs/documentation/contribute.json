@@ -5,11 +5,5 @@
             "href": "/pages/contact.html",
             "text": "Get in touch"
         }
-    },
-    {
-        "image": {
-            "src": "/portrait.jpg",
-            "size": "200px"
-        }
     }
 ]
