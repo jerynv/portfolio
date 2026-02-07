@@ -3,7 +3,7 @@
     "title": "Go JSON Parsing System"
   },
   {
-    "description": "This module is a scalable JSON parsing system implemented in Go. It processes structured and semi-structured JSON inputs, supporting standard JSON (objects/arrays), NDJSON, and multi-layer nested data. It includes dynamic schema inference, recursive normalization, nested table handling, NDJSON parsing, S3 streaming I/O, and upload workflows. Large files (>10 GB) \"this large for testing, realistically 500Mb \" are routed toward a Parquet conversion pipeline (currently stubbed)."
+    "description": "This module is a scalable JSON parsing system implemented in Go. It processes structured and semi-structured JSON inputs, supporting standard JSON (objects/arrays), NDJSON, and multi-layer nested data. It includes dynamic schema inference, recursive normalization, nested table handling, NDJSON parsing, S3 streaming I/O, and upload workflows. Large files (>10 GB for testing; in production, typically 500MB) are routed toward a Parquet conversion pipeline (currently stubbed)."
   },
   {
     "smallLabel": "1. Controller Layer"
