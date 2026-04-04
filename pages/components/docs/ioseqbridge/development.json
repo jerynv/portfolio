@@ -10,13 +10,13 @@
     "smallLabel": "Plugin Overview"
   },
   {
-    "text": "The plugin exposes audio playback and equalizer functionality to Flutter through a MethodChannel and streams updates (like playback position and errors) back to Flutter using an EventChannel."
+    "text": "The plugin exposes audio playback and equalizer functionality to Flutter through a MethodChannel and streams playback position and error updates back via an EventChannel."
   },
   {
     "smallLabel": "Now Playing Info"
   },
   {
-    "text": "To keep system media controls (Control Center and lock screen) updated, the updateNowPlayingInfo function updates metadata such as the title, artist, album, artwork, playback duration, and current playback time."
+    "text": "The updateNowPlayingInfo function keeps the Control Center and lock screen metadata in sync with the current track's title, artist, album, artwork, duration, and playback position."
   },
   {
     "codeSnippet": {
@@ -111,6 +111,6 @@
     ]
   },
   {
-    "text": "Overall, the AudioEqPlugin provides a full-featured real-time equalizer with playback controls and system integration, bridging Flutter applications to iOS’s AVFoundation framework."
+    "text": "The AudioEqPlugin provides a full-featured real-time equalizer with playback controls and system integration, bridging Flutter to iOS’s AVFoundation framework."
   }
 ]

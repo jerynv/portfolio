@@ -4,16 +4,16 @@
         "version": "1.0.0"
     },
     {
-        "description": "PollChat is a anonymous poll application that allows users to create polls and vote on them, anonymously. with this nature of anonymity it brings an obvious problem of bullying and harassment. This document will walk you through you my thought process of hacking into the app and retrieving user unaccessible information. "
+        "description": "PollChat is an anonymous poll application that allows users to create polls and vote on them anonymously. With this nature of anonymity comes an obvious problem of bullying and harassment. This document walks through my thought process of investigating the app and retrieving user-inaccessible information."
     },
     {
         "label": "01/23/2025"
     },
     {
-        "text": "The app had just gotten out and people from my school where already creating polls, but it was not long until I saw the first poll that was clearly made to slander someone. I became curious, and started to look into what network traffic the app was sending and receiving. I try and stay respectful but the authentication handling on the server end was mad of complete garbage. I was able to get a hold of my own JWT token and started to look into the API calls the app was making, replicating and adjusting them."
+        "text": "The app had just launched and people from my school were already creating polls, but it was not long until I saw the first poll clearly made to slander someone. I became curious and started looking into what network traffic the app was sending and receiving. The authentication handling on the server side was poorly implemented. I was able to capture my own JWT token and started replicating and adjusting the API calls the app was making."
     },
     {
-        "smallLabel": "Example of a API call:"
+        "smallLabel": "Example of an API call:"
     },
     {
         "codeSnippet": {
@@ -22,19 +22,19 @@
         }
     },
     {
-        "smallLabel": "Whats going on?"
+        "smallLabel": "What is going on?"
     },
     {
-        "text": "This is just a simple API call given the JWT token, the server will respond with the users \"me\" contacts list. But when did we give the server all of our contacts information? When we first downloaded the app it wouldnt let us in unless we gave access to our contacts to \"verify\" that you go to the school you selected, this information is stored on the server for some reason and can be retrieved with a simple API call. so far though its secure needing proper authorization to access."
+        "text": "This is a simple API call - given the JWT token, the server responds with the user's full contacts list. When you first download the app, it requires access to your contacts to \"verify\" that you attend the school you selected. This information is stored on the server and can be retrieved with a single API call. So far, though, the data is protected behind proper authorization."
     },
     {
         "label": "01/24/2025"
     },
     {
-        "text": "Coming up on the second day i still have not found a way to get the information of other users, but i have found a way to get the information of the user that is currently logged in. I have found a way to get the JWT token of a user by login in currently at the time just myself"
+        "text": "On the second day I still had not found a way to access other users' data, but I had found how the login flow worked. I was able to trigger the OTP generation endpoint for any phone number."
     },
     {
-        "smallLabel": "But wait!"
+        "smallLabel": "The login endpoint"
     },
     {
         "codeSnippet": {
@@ -43,10 +43,10 @@
         }
     },
     {
-        "smallLabel": "Whats this?"
+        "smallLabel": "What is this?"
     },
     {
-        "text": "Digging deeper into the apps API calls i noticed a different server that was used for authentication \"auth.poll.chat\",  this server was not as secure as the \"API\" server. I was able to send a six digit one time passcode to any phone number registered or not, in one minute intervals, the rate limiting on the OTP codes was not of concern to me as i would be exploiting a different vulnerability as well as the this one together. ->"
+        "text": "Digging deeper into the app's API calls, I noticed a separate authentication server at \"auth.poll.chat\". This server was less protected than the main API. I could send a six-digit one-time passcode to any phone number - registered or not - at one-minute intervals. The rate limiting on OTP generation was not the vulnerability I would be exploiting. The real issue was elsewhere."
     },
     {
         "smallLabel": "Exploiting the vulnerability"
@@ -61,16 +61,16 @@
         }
     },
     {
-        "smallLabel": "We got in!"
+        "smallLabel": "The vulnerability"
     },
     {
-        "text": "The above code snippet is an example of a simple login attempt, once a user sends themselves a OTP \"shown in previous snippet \" they then insert the code into the apps login page and the server will respond with a JWT token that can be used to access the API server and the corresponding data. With access to these functions without the logistics of the app limiting us we are able to exploit the fact that the server does not remove or change the login code after a set number of failed login attempts, And get this... the server does not rate limit API calls to its auth endpoints!  "
+        "text": "Once a user sends themselves an OTP, they enter the code into the app's login page. The server responds with a JWT token granting full API access. The critical flaw: the server does not invalidate the login code after failed attempts, and the authentication endpoints have no rate limiting on login requests."
     },
     {
-        "text": "Essentially, i am able to artificially generate a login code for a phone number of a user i think has the app, and then send a minimum of 1 request and a maximum of one million requests to guess the login code. The hard work is done and it has now just turned into a long waiting game. The biggest downside of the operation is that we are unable to know if a phone number has a account or not before we start the guessing game. so one bad phone number could waste upwards of 20 - 120 minutes of our time. So i compromised and made a script that would start five terminals, all sending requests to the server with interval code guesses given a set range and constant phone number. This would allow me to guess 1 million codes in 30 minutes. maximum."
+        "text": "This means I could generate a login code for any phone number, then brute-force all one million possible six-digit combinations against the server with no penalty. The only unknown is whether a phone number actually has an account - a bad number wastes 20 to 120 minutes of guessing. I built a script that spawns five terminals, each covering a range of 200,000 codes, allowing me to exhaust all one million possibilities in under 30 minutes."
     },
     {
-        "smallLabel": "Script master"
+        "smallLabel": "The brute-force coordinator"
     },
     {
         "codeSnippet": {

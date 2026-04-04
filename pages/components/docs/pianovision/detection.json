@@ -1,0 +1,52 @@
+[
+    {
+        "title": "Piano Vision - Key Detection"
+    },
+    {
+        "smallLabel": "Brightness-Based MIDI Generation"
+    },
+    {
+        "description": "Piano Vision converts piano performance videos into MIDI files by detecting when keys are pressed through brightness analysis. The system uses a two-phase approach: calibrate the rest-state brightness of all 88 keys, then detect deviations frame-by-frame to trigger MIDI note events."
+    },
+    {
+        "smallLabel": "The Core Algorithm"
+    },
+    {
+        "text": "The detection starts with a simple observation - when a piano key is pressed, the brightness at that point changes. A white key gets shadowed by the finger, a black key reflects light differently when depressed. If you sample the brightness at a fixed point on each key and compare it to a calibration baseline, you can detect presses."
+    },
+    {
+        "text": "The sampling function reads a 3x3 pixel neighborhood around each calibration point, averages the RGB channels to get brightness, and returns the mean intensity. The neighborhood smoothing reduces noise from individual pixel variations and camera compression artifacts."
+    },
+    {
+        "codeSnippet": {
+            "type": "typescript",
+            "name": "utils.ts - sampleArea()",
+            "data": "export function sampleArea(\n  pixels: Uint8ClampedArray,\n  cx: number,\n  cy: number,\n  w: number,\n  h: number,\n): number {\n  let sum = 0;\n  let count = 0;\n  for (let dy = -1; dy <= 1; dy++) {\n    for (let dx = -1; dx <= 1; dx++) {\n      const sx = Math.max(0, Math.min(w - 1, cx + dx));\n      const sy = Math.max(0, Math.min(h - 1, cy + dy));\n      const offset = (sy * w + sx) * 4;\n      sum += (pixels[offset] + pixels[offset + 1] + pixels[offset + 2]) / 3;\n      count++;\n    }\n  }\n  return sum / count;\n}"
+        }
+    },
+    {
+        "smallLabel": "Frame Processing"
+    },
+    {
+        "text": "Each frame, the canvas draws the current video frame and extracts the raw pixel data. For each of the 88 calibration points, it samples the current brightness and compares it to the calibration baseline. If the difference exceeds the sensitivity threshold, a MIDI note-on event fires. When the brightness returns to baseline, a note-off event fires."
+    },
+    {
+        "codeSnippet": {
+            "type": "typescript",
+            "name": "use-piano-detection.ts - processFrame()",
+            "data": "points.forEach((p, i) => {\n  const cx = Math.min(Math.floor((p.x / 100) * w), w - 1);\n  const cy = Math.min(Math.floor((p.y / 100) * h), h - 1);\n  const intensity = sampleArea(pixels, cx, cy, w, h);\n  const diff = Math.abs(intensity - calibrationData[i]);\n  const isActive = diff > threshold;\n\n  if (isActive && !activeKeysRef.current.has(p.note) && !force) {\n    const lastEvent = lastEventTimes.current[p.note] || 0;\n    if (time - lastEvent > debounceSec) {\n      setMidiEvents((prev) => [...prev, { note: p.note, time, type: 'on' }]);\n      activeKeysRef.current.add(p.note);\n      lastEventTimes.current[p.note] = time;\n    }\n  } else if (!isActive && activeKeysRef.current.has(p.note) && !force) {\n    const lastEvent = lastEventTimes.current[p.note] || 0;\n    if (time - lastEvent > debounceSec) {\n      setMidiEvents((prev) => [...prev, { note: p.note, time, type: 'off' }]);\n      activeKeysRef.current.delete(p.note);\n      lastEventTimes.current[p.note] = time;\n    }\n  }\n});"
+        }
+    },
+    {
+        "smallLabel": "Why It Works"
+    },
+    {
+        "list": [
+            "Delta-based detection - only the change in brightness matters, making it robust to varying room lighting",
+            "Per-key debouncing - each key has independent timing to prevent rapid bouncing when fingers hover",
+            "Ref-based state - activeKeysRef tracks pressed keys without triggering React re-renders, keeping canvas processing fast",
+            "Calibration points use percentage coordinates (0-100) so the detection grid scales with any video resolution",
+            "The 3x3 neighborhood sampling smooths out compression noise that would cause false triggers on individual pixels"
+        ]
+    }
+]

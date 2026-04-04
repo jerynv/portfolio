@@ -1,0 +1,53 @@
+[
+    {
+        "title": "Redline - Delta Analysis"
+    },
+    {
+        "smallLabel": "Real-Time Performance Regression Detection"
+    },
+    {
+        "description": "Redline monitors PostgreSQL in real time by polling pg_stat_statements and computing deltas between polling cycles. The core of the system is a stateful collector that tracks every query's performance across time, detects regressions, and classifies severity - all without requiring any schema changes to the monitored database."
+    },
+    {
+        "smallLabel": "The Problem"
+    },
+    {
+        "text": "Most database monitoring tools either require you to install extensions, modify your schema, or run expensive EXPLAIN queries on production traffic. I wanted something that could be dropped onto any PostgreSQL instance via Docker and immediately start surfacing which queries are degrading - no setup, no config files, no schema migrations."
+    },
+    {
+        "text": "The key insight was that pg_stat_statements already tracks cumulative query stats. If you poll it at regular intervals and diff the results, you get real-time delta metrics for free. The challenge is doing that diff correctly and making it useful."
+    },
+    {
+        "smallLabel": "The Collector"
+    },
+    {
+        "text": "The collector maintains a map of previous stats keyed by query ID. Each poll cycle, it fetches the current stats, computes the delta against the previous snapshot, classifies the trend and severity, then pushes the result into a channel for WebSocket broadcast."
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "name": "collector.go - poll()",
+            "data": "func (c *Collector) poll(updateChan chan<- models.UpdateEvent) {\n\tstats, err := c.db.GetQueryStats()\n\tif err != nil {\n\t\tlog.Printf(\"Error fetching query stats: %v\", err)\n\t\treturn\n\t}\n\n\tc.mu.Lock()\n\tdefer c.mu.Unlock()\n\n\tnow := time.Now()\n\telapsed := now.Sub(c.lastPollTime).Seconds()\n\tc.lastPollTime = now\n\n\tvar deltas []models.QueryDelta\n\n\tfor _, current := range stats {\n\t\tprev, exists := c.previousStats[current.QueryID]\n\n\t\tvar delta models.QueryDelta\n\t\tdelta.QueryID = current.QueryID\n\t\tdelta.Query = normalizeQuery(current.Query)\n\t\tdelta.MeanExecTime = current.MeanExecTime\n\t\tdelta.Timestamp = now\n\n\t\tif exists {\n\t\t\tcallsDelta := current.Calls - prev.Calls\n\t\t\tdelta.CallsDelta = callsDelta\n\t\t\tdelta.CallsPerSec = float64(callsDelta) / elapsed\n\t\t\tdelta.PrevMeanExecTime = prev.MeanExecTime\n\t\t\tdelta.LatencyChange = ((current.MeanExecTime - prev.MeanExecTime) / prev.MeanExecTime) * 100\n\t\t\tdelta.Trend = calculateTrend(delta.LatencyChange)\n\t\t\tdelta.Severity = calculateSeverity(current.MeanExecTime, delta.LatencyChange)\n\t\t} else {\n\t\t\tdelta.CallsDelta = current.Calls\n\t\t\tdelta.CallsPerSec = float64(current.Calls) / elapsed\n\t\t\tdelta.PrevMeanExecTime = current.MeanExecTime\n\t\t\tdelta.LatencyChange = 0\n\t\t\tdelta.Trend = \"stable\"\n\t\t\tdelta.Severity = calculateSeverity(current.MeanExecTime, 0)\n\t\t}\n\n\t\tdeltas = append(deltas, delta)\n\t\tc.previousStats[current.QueryID] = current\n\t}\n\n\tupdateChan <- models.UpdateEvent{\n\t\tType:    \"update\",\n\t\tQueries: deltas,\n\t\tActive:  active,\n\t}\n}"
+        }
+    },
+    {
+        "smallLabel": "What is happening"
+    },
+    {
+        "text": "The percentage change calculation ((current - prev) / prev * 100) normalizes latency deltas so a 10ms query jumping to 15ms gets flagged the same as a 100ms query jumping to 150ms - both are 50% regressions. The trend and severity classifiers then turn these raw numbers into actionable signals."
+    },
+    {
+        "text": "The previousStats map acts as a sliding baseline. Every poll cycle updates the baseline, so the system naturally adapts to gradual changes while still catching sudden spikes. First-time queries get a severity classification based on absolute latency since there is no previous data to compare against."
+    },
+    {
+        "smallLabel": "Design Decisions"
+    },
+    {
+        "list": [
+            "Mutex-protected state - the collector can be polled from any goroutine safely",
+            "Channel-based output - decouples collection from broadcasting, letting the WebSocket hub handle fan-out independently",
+            "Elapsed-time normalization - CallsPerSec accounts for variable poll intervals rather than assuming fixed timing",
+            "Query normalization - strips literals from queries so SELECT * FROM users WHERE id = 1 and id = 2 are tracked as the same query pattern"
+        ]
+    }
+]

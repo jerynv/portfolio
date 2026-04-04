@@ -69,7 +69,7 @@
         "smallLabel": "Integration Point"
     },
     {
-        "text": "The Go layer triggers a database update through docker network connected to the private backend endpoints editDataset method, once normalization is starting, failing, or completing. This keeps the dataset lifecycle synchronized between Quantarra’s Go-based processing layer and the Node.js backend layer."
+        "text": "The Go layer triggers a database update through the Docker network, calling the private backend’s editDataset method when normalization starts, fails, or completes. This keeps the dataset lifecycle synchronized between Quantarra’s Go processing layer and the Node.js backend."
     },
     {
         "smallLabel": "System Goals"

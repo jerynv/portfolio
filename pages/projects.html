@@ -4,8 +4,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projects</title>
+    <title>Projects - Jeryn Vicari</title>
     <link rel="icon" type="image/x-icon" href="/./j.ico" />
+    <link rel="canonical" href="https://jeryn.me/pages/projects.html">
+
+    <meta name="description"
+        content="Portfolio projects by Jeryn Vicari - full-stack systems built with Go, Rust, TypeScript, and Python. Real-time monitoring, cryptographic trust, AI agents, and developer tools.">
+    <meta name="keywords"
+        content="Jeryn Vicari projects, Go developer, Rust developer, TypeScript, full-stack portfolio, software engineering">
+
+    <meta property="og:title" content="Projects - Jeryn Vicari">
+    <meta property="og:description"
+        content="Full-stack developer portfolio featuring systems in Go, Rust, TypeScript, and Python.">
+    <meta property="og:url" content="https://jeryn.me/pages/projects.html">
 
     <link rel="stylesheet" href="../css/root.css" />
     <link rel="stylesheet" href="../css/projects.css" />
@@ -19,188 +30,217 @@
     <main>
         <h1 class="h1">Projects</h1>
         <p>
-            I specialize in logistical and systems-oriented coding, while also
-            bringing strong experience in user experience and UI design. Here
-            are some of my projects:
+            I build systems-level software and full-stack applications. My work spans
+            real-time monitoring, AI, developer tooling, nutrition tech, and mobile platforms.
         </p>
+
+        <div class="project">
+            <div class="container">
+                <div class="text">
+                    <h2>Munchy</h2>
+                    <p>
+                        All-in-one nutrition intelligence platform with AI-powered macro reasoning,
+                        6M+ verified foods, and campus dining integration. Provider-agnostic backend
+                        adapter pattern cleanly decouples nutrition data providers from the frontend -
+                        enabling provider swapping without client-side changes.
+                    </p>
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/macrouni-web">GitHub</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">React</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Hono</span>
+                        <span class="tag">Prisma</span>
+                        <span class="tag">Cloudflare Pages</span>
+                        <span class="tag">Flutter</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="container">
+                <div class="text">
+                    <h2>Redline</h2>
+                    <p>
+                        Real-time database performance monitoring for PostgreSQL. Surfaces query
+                        execution patterns and bottlenecks without requiring schema changes -
+                        deployed via Docker with zero configuration. Features delta analysis for
+                        performance regression detection, query normalization, EXPLAIN plan
+                        analysis, and intelligent alerting with WebSocket-driven live updates.
+                    </p>
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/redline">GitHub</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Go</span>
+                        <span class="tag">React</span>
+                        <span class="tag">WebSocket</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="project">
             <div class="container">
                 <div class="text">
                     <h2>Quantarra</h2>
                     <p>
-                        A data intelligence framework designed to unify, process, and structure information from any
-                        source.
+                        A data intelligence framework designed to unify, process, and structure
+                        information from any source. Manages normalization, storage, and recovery
+                        through its core subsystem
+                        <a href="/pages/docs.html?doc=GDN&page=GDN"><span class="link"></span>GDN</a>,
+                        ensuring data consistency even under failure.
                     </p>
-                    <p>
-                        Built with <a target="_blank" href="https://go.dev/">Go</a> and <a target="_blank"
-                            href="https://nodejs.org/">Node.js</a>,
-                        Quantarra manages normalization, storage, and recovery through its core system <a href="/pages/docs.html?doc=GDN&page=GDN"><span class="link"></span>GDN</a> ensuring data consistency even under failure.
-                    </p>
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/Quantarra">GitHub</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Go</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">Redis</span>
+                        <span class="tag">S3</span>
+                    </div>
                 </div>
-                <div class="screenshot ">
-                    <img src="/screen_shots/quantarra.png" alt="Quantarra overview">
+                <div class="screenshot">
+                    <img src="/screen_shots/quantarra.png" alt="Quantarra data intelligence framework" loading="lazy">
                 </div>
             </div>
         </div>
+
         <div class="project">
             <div class="container">
                 <div class="text">
-                    <h2>School pass system</h2>
+                    <h2>Monday</h2>
                     <p>
-                        A school pass system that I made for my Software
-                        Development Capstone class. The backend is was made with
-                        <a target="_blank" href="https://expressjs.com/">Express.js</a>
-                        and The user interface is made utilizing
-                        <a href="https://flutter.dev/">Flutter</a> allowing students and
-                        teachers to create passes for themselves and others and view their
-                        passes in a simple and easy to read format.
+                        Autonomous personal AI assistant running locally on macOS. Multi-subsystem
+                        architecture with perception, cognition, and action layers - wake-word
+                        detection, speech-to-text, text-to-speech, and a modular tool ecosystem
+                        with persistent memory. Event-driven architecture enabling real-time
+                        environmental awareness.
                     </p>
-                    <p>
-                        This project has been the best experience I have ever had with
-                        coding, Learning Flutter and maintaining a fullstack software for
-                        the possible use of my entire school was a challenge that I was
-                        more than happy to take on.
-                    </p>
-                </div>
-                <div class="screenshot no-border">
-                    <img src="/screen_shots/hsepasses.png" />
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Claude API</span>
+                        <span class="tag">macOS</span>
+                        <span class="tag">Speech Recognition</span>
+                        <span class="tag">TTS</span>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="project">
             <div class="container">
                 <div class="text">
-                    <h2>Local Music</h2>
-                    <p>A complete, client only, local music player</p>
+                    <h2>Piano Vision</h2>
                     <p>
-                        This project was made in my free time, and is a complete local
-                        music player that I made using
-                        <a target="_blank" href="https://flutter.dev/">Flutter</a>. The
-                        player is able to play music from your local storage, and has a
-                        simple and easy to use interface. my favorite feature of this app
-                        is the equalizer that I made from scratch using flutters custom
-                        drawing functionality. { check out the <a href="/pages/docs.html?doc=Ioseqbridge&page=images">Ioseqbridge</a> docs for more
-                        photos }
+                        Web application that converts piano performance videos into MIDI files
+                        through visual key detection and brightness analysis. Drag-and-drop
+                        interface with interactive 88-key calibration, real-time note stream
+                        visualization, preset management, and configurable sensitivity tuning.
                     </p>
-                </div>
-                <div class="screenshot no-border">
-                    <img src="/screen_shots/localmusic.png" />
+                    <div class="project-links">
+                        <a target="_blank" href="https://piano-vision.pages.dev">Live</a>
+                        <a target="_blank" href="https://github.com/jerynv/piano-vision">GitHub</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">React</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Canvas API</span>
+                        <span class="tag">MIDI</span>
+                        <span class="tag">Vite</span>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="project">
             <div class="container">
                 <div class="text">
-                    <h2>Custom Video Streamer / Player</h2>
+                    <h2>API Sentinel</h2>
                     <p>
-                        This player can play every single video format and video
-                        resolution supported by html { 1080p / 4k / 8k }, while allowing for it to support stream piped sources { m3u8, hls,
-                        mp4, etc..} from any servers streaming endpoints. I also
-                        specifically designed the player to look sleek and comfortable.
+                        CLI tool for automated breaking change detection in APIs. Monitors OpenAPI
+                        schemas across versions, classifies changes by severity, and integrates
+                        directly into CI/CD pipelines with Slack alerting and GitHub Actions
+                        support. Published on PyPI.
                     </p>
-                </div>
-                <div class="screenshot">
-                    <img src="/screen_shots/player.png" />
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/api-sentinel">GitHub</a>
+                        <a target="_blank" href="https://pypi.org/project/api-sentinel-cli/">PyPI</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">OpenAPI</span>
+                        <span class="tag">CLI</span>
+                        <span class="tag">CI/CD</span>
+                        <span class="tag">PyPI</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- <div class="project">
-            <div class="container">
-                <div class="text">
-                    <h2>Tic Tac Toe</h2>
-                    <p>
-                        A simple game of tic tac toe that I made in my free time. The game
-                        is single player as it is powered by a recursive min max function. I made this game to test my ability to
-                        make a game in a short amount of time.
-                    </p>
-                    <p>
-                        The game is made using pure html, css, and javascript. It has a
-                        simple and easy to use interface.
-                    </p>
-                </div>
-                <div class="screenshot">
-                    <img src="/screen_shots/ttt.png" alt="" />
-                </div>
-            </div>
-        </div> -->
-        <!-- <div class="project">
-            <div class="container">
-                <div class="text">
-                    <h2>Torrent Scraper</h2>
-                    <p>
-                        The script is powered by a custom torrent scraper that I made in
-                        <a href="https://bun.sh">Bun JS</a>. The scraper is able to scrape
-                        torrent information for movies and tv shows from multiple torrent
-                        sites and display them in a simple and easy to read json format.
-                    </p>
-                    <p>
-                        My motives for this were born from pure curiosity, and serves no
-                        other purpose thank just retrieving magnet links .
-                    </p>
-                </div>
-                <div class="screenshot">
-                    <img src="/screen_shots/torrent.png" alt="" />
-                </div>
-            </div>
-        </div> -->
-        <!-- <div class="project">
-            <div class="container">
-                <div class="text">
-                    <h2>Muun TV</h2>
-                    <p>
-                        A very functional movie rating service developed solely by me.
-                    </p>
-                    <p>
-                        One of my most ambitious projects, It is powered by a custom
-                        backend that I made using
-                        <a target="_blank" href="https://hono.dev/">Hono JS</a> and The
-                        frontend is made utilizing pure html, css, and javascript. The
-                        service allows users to rate movies and tv shows, and view their
-                        ratings in a simple and easy to read format.
-                    </p>
-                </div>
-                <div class="screenshot">
-                    <img autoplay loop src="/screen_shots/muuntv.png" />
-                </div>
-            </div>
-        </div> -->
+
         <div class="project">
             <div class="container">
                 <div class="text">
-                    <h2>HSE Schedule</h2>
+                    <h2>Muun Player</h2>
                     <p>
-                        A School schedule app displaying time till class end and countdowns for other school events. I created this my freshman year of highschool in
-                        response to the school issued schedule app undergoing unannounced maintenance for a prolonged period of time.
-                        I wanted to create a reliable alternative for myself and my peers.
+                        Lightweight, customizable HTML5 video player with HLS streaming support.
+                        Handles every video format and resolution supported by the browser, with
+                        quality selection, episode navigation, picture-in-picture, subtitle support,
+                        and provider switching with automatic error recovery. Published on npm.
                     </p>
-              
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/Muun-Player">GitHub</a>
+                        <a target="_blank" href="https://www.npmjs.com/package/muun-player">npm</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">HLS</span>
+                        <span class="tag">hls.js</span>
+                        <span class="tag">HTML5 Video</span>
+                        <span class="tag">npm</span>
+                    </div>
                 </div>
                 <div class="screenshot">
-                    <img src="/screen_shots/schedule.png" alt="" />
+                    <img src="/screen_shots/player.png" alt="Muun Player video interface" loading="lazy">
                 </div>
             </div>
         </div>
+
         <div class="project">
             <div class="container">
                 <div class="text">
-                    <h2>My Portfolio</h2>
+                    <h2>UMRCP</h2>
                     <p>
-                        I made this website to showcase my projects, documentation of my
-                        thoughts, and to give a brief overview of who I am as a person and
-                        a developer.
+                        Defense simulation demonstrating missile-radar connectivity with
+                        automatic failover. When a radar is destroyed, active missiles
+                        autonomously reconnect to surviving radars. Features event-driven
+                        architecture, multiple guidance laws (Proportional Navigation, APN,
+                        Pure Pursuit, Command), IFF validation, and YAML-configurable
+                        scenarios with failover scoring.
                     </p>
-                    <p>
-                        I am currently working on a code blog { extension of journal } for
-                        this website, and other projects that I will be adding to
-                        this page soon.
-                    </p>
-                </div>
-                <div class="screenshot">
-                    <img src="/screen_shots/this.png" alt="" />
+                    <div class="project-links">
+                        <a target="_blank" href="https://github.com/jerynv/Missile-Protocol">GitHub</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Pygame</span>
+                        <span class="tag">Event-Driven</span>
+                        <span class="tag">Simulation</span>
+                        <span class="tag">pytest</span>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <p class="github-more">
+            More projects available on <a target="_blank" href="https://github.com/jerynv">GitHub</a>.
+        </p>
     </main>
 </body>
 

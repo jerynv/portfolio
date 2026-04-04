@@ -556,6 +556,29 @@ const docs_template = {
                 notifier: { page: "notifier" }
             },
         },
+        "Redline": {
+            children: {
+                "delta analysis": { page: "delta" },
+                "websocket hub": { page: "websocket" },
+            },
+        },
+        "Monday": {
+            children: {
+                "agent loop": { page: "cognition" },
+                "tool system": { page: "tools" },
+            },
+        },
+        "Piano Vision": {
+            children: {
+                "key detection": { page: "detection" },
+            },
+        },
+        "UMRCP": {
+            children: {
+                "failover protocol": { page: "failover" },
+                "guidance laws": { page: "guidance" },
+            },
+        },
     },
     load_path: "../pages/components/docs/",
 };

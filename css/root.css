@@ -40,18 +40,21 @@ body {
 @font-face {
     font-family: Inter;
     src: url(/fonts/Inter-Regular.woff2) format("woff2");
+    font-display: swap;
 }
 
 @font-face {
     font-family: Bagnard;
     src: url(/fonts/BagnardSans.otf) format("opentype");
     font-weight: 700;
+    font-display: swap;
 }
 
 @font-face {
     font-family: Inter;
     src: url(/fonts/Inter-Bold.woff2) format("woff2");
     font-weight: bold;
+    font-display: swap;
 }
 
 a {
@@ -227,4 +230,64 @@ header svg:active {
      header .mode-icon {
        display: none;
     }
+}
+
+/* Project links (GitHub, Live, npm, PyPI) */
+.project-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.project-links a {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: normal;
+    text-decoration: none;
+    color: rgba(var(--text), 0.5);
+    border-bottom: 1px solid rgba(var(--text), 0.2);
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.project-links a:hover {
+    color: rgb(var(--text));
+    border-color: rgba(var(--text), 0.6);
+}
+
+/* Technology tags */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border: 1px solid rgba(var(--text), 0.2);
+    color: rgba(var(--text), 0.5);
+    letter-spacing: 0.02em;
+}
+
+.tag.redacted {
+    border-style: dashed;
+    font-style: italic;
+    color: rgba(var(--text), 0.35);
+}
+
+.redacted-note {
+    font-style: italic;
+    color: rgba(var(--text), 0.35) !important;
+}
+
+.github-more {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(var(--text), 0.1);
+    color: rgba(var(--text), 0.5);
+    font-family: var(--font-body);
+    width: 100%;
+    text-align: center;
 }

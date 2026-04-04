@@ -1,0 +1,48 @@
+[
+    {
+        "title": "Redline - WebSocket Hub"
+    },
+    {
+        "smallLabel": "Real-Time Broadcasting with Backpressure Handling"
+    },
+    {
+        "description": "Redline streams live query metrics to any number of connected dashboards over WebSocket. The hub implements Go's fan-out pattern with an important detail: graceful backpressure handling that prevents one slow client from stalling the entire monitoring system."
+    },
+    {
+        "smallLabel": "Why This Matters"
+    },
+    {
+        "text": "In a monitoring tool, responsiveness is everything. If someone opens a dashboard on a slow connection or a tab goes to sleep, their WebSocket buffer fills up. Without backpressure handling, the broadcast loop blocks on that one client, and every other dashboard freezes. For a tool that is supposed to catch performance problems, becoming a performance problem itself is not an option."
+    },
+    {
+        "smallLabel": "The Hub"
+    },
+    {
+        "codeSnippet": {
+            "type": "go",
+            "name": "hub.go - Run()",
+            "data": "func (h *Hub) Run() {\n\tfor {\n\t\tselect {\n\t\tcase client := <-h.register:\n\t\t\th.mu.Lock()\n\t\t\th.clients[client] = true\n\t\t\th.mu.Unlock()\n\n\t\tcase client := <-h.unregister:\n\t\t\th.mu.Lock()\n\t\t\tif _, ok := h.clients[client]; ok {\n\t\t\t\tdelete(h.clients, client)\n\t\t\t\tclose(client.send)\n\t\t\t}\n\t\t\th.mu.Unlock()\n\n\t\tcase message := <-h.broadcast:\n\t\t\tdata, err := json.Marshal(message)\n\t\t\tif err != nil {\n\t\t\t\tlog.Printf(\"Error marshaling message: %v\", err)\n\t\t\t\tcontinue\n\t\t\t}\n\n\t\t\th.mu.RLock()\n\t\t\tfor client := range h.clients {\n\t\t\t\tselect {\n\t\t\t\tcase client.send <- data:\n\t\t\t\tdefault:\n\t\t\t\t\tclose(client.send)\n\t\t\t\t\tdelete(h.clients, client)\n\t\t\t\t}\n\t\t\t}\n\t\t\th.mu.RUnlock()\n\t\t}\n\t}\n}"
+        }
+    },
+    {
+        "smallLabel": "The Key Detail"
+    },
+    {
+        "text": "The select with a default clause inside the broadcast loop is the critical piece. When sending to a client's buffered channel, if the channel is full (client is too slow), the default branch fires immediately - closing the client and removing it from the map. This is a non-blocking send. The hub never waits on any single client."
+    },
+    {
+        "text": "The RLock during broadcast allows multiple goroutines to read the client map concurrently while still protecting mutations through the full Lock on register/unregister. This means client connections and disconnections do not block active metric streaming."
+    },
+    {
+        "smallLabel": "Architecture Flow"
+    },
+    {
+        "list": [
+            "Collector polls pg_stat_statements and pushes deltas into a channel",
+            "Hub receives from the broadcast channel and fans out to all connected clients",
+            "Each client has a buffered send channel (256 messages) - if it fills, the client is dropped",
+            "Clients register on WebSocket upgrade and unregister on disconnect",
+            "The entire pipeline is non-blocking - no goroutine ever waits on another"
+        ]
+    }
+]

@@ -1,0 +1,43 @@
+[
+    {
+        "title": "UMRCP - Failover Protocol"
+    },
+    {
+        "smallLabel": "Radar Destruction and Missile Reassignment"
+    },
+    {
+        "description": "UMRCP simulates missile-radar connectivity with automatic failover. When a radar is destroyed mid-engagement, all missiles guided by that radar become orphaned. The connection manager implements a three-branch decision tree to handle this gracefully: reassign to a backup radar, activate terminal seekers for autonomous guidance, or mark the missile as lost."
+    },
+    {
+        "smallLabel": "The Problem"
+    },
+    {
+        "text": "In a real engagement, radar-guided missiles depend on their guiding radar for target tracking data. If that radar gets destroyed, the missiles do not just stop - they need to either find another radar to guide them, switch to their own onboard seeker if they have one, or accept that they are lost. The failover needs to happen in a single simulation tick - there is no time for negotiation."
+    },
+    {
+        "codeSnippet": {
+            "type": "python",
+            "name": "connection_manager.py - handle_radar_destroyed()",
+            "data": "def handle_radar_destroyed(self, radar_id: str, sim_time: float) -> list[str]:\n    radar = self.radar_reg.get(radar_id)\n    if radar:\n        radar.state = RadarState.DESTROYED\n\n    orphaned = self.missile_reg.by_radar(radar_id)\n    reassigned: list[str] = []\n\n    for missile in orphaned:\n        missile.guiding_radar_id = None\n        if missile.id in self.connections:\n            self.connections[missile.id].transition(ConnectionState.FAILED)\n\n        new_radar = self._find_best_radar(missile)\n        if new_radar is not None:\n            if self.iff.check_entity(missile.iff_code):\n                self.connect(new_radar, missile, sim_time)\n                reassigned.append(missile.id)\n                logger.info(f\"Failover: {missile.spec.name} [{missile.id}] \"\n                           f\"-> {new_radar.spec.name} [{new_radar.id}]\")\n        else:\n            if missile.can_go_autonomous:\n                missile.state = MissileState.AUTONOMOUS\n                logger.info(f\"Missile {missile.id} entering autonomous mode\")\n            else:\n                missile.state = MissileState.LOST\n                logger.warning(f\"Missile {missile.id} LOST - no radar, no seeker\")\n\n    return reassigned"
+        }
+    },
+    {
+        "smallLabel": "The Three Branches"
+    },
+    {
+        "list": [
+            "Reassign - if a backup radar is available AND the IFF code validates, connect the missile to the new radar",
+            "Autonomous - if no radar is available but the missile has a terminal seeker (can_go_autonomous), switch to self-guided mode",
+            "Lost - if neither option exists, the missile is marked as lost and will eventually fall off trajectory"
+        ]
+    },
+    {
+        "smallLabel": "IFF Gating"
+    },
+    {
+        "text": "The IFF (Identification Friend or Foe) check gates the failover. Even if a spare radar exists, the missile must pass IFF validation before it can be reassigned. This prevents rogue or compromised missiles from hijacking friendly radar resources during the chaos of a radar kill event."
+    },
+    {
+        "text": "The connection state machine transitions through CONNECTED -> FAILED -> CONNECTED (on reassignment) or FAILED -> terminal state. The connection manager tracks all of these transitions for post-simulation scoring - how many failovers succeeded, how many missiles were lost, how long the gaps lasted."
+    }
+]

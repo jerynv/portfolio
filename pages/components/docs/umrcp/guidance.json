@@ -1,0 +1,47 @@
+[
+    {
+        "title": "UMRCP - Guidance Laws"
+    },
+    {
+        "smallLabel": "Proportional Navigation Implementation"
+    },
+    {
+        "description": "UMRCP implements multiple guidance laws for missile steering, including Proportional Navigation (PN), Augmented Proportional Navigation (APN), Pure Pursuit, and Command guidance. The PN implementation is the most interesting - it is the same fundamental equation used in real radar-guided missiles."
+    },
+    {
+        "smallLabel": "The Math"
+    },
+    {
+        "text": "Proportional Navigation works on a simple principle: steer the missile perpendicular to the line-of-sight (LOS) to the target, with an acceleration proportional to both the closing velocity and the rate at which the LOS angle is rotating. The equation is a = N * Vc * LOS_rate, where N is the navigation constant (typically 3-5), Vc is the closing velocity, and LOS_rate is the angular rotation rate of the line from missile to target."
+    },
+    {
+        "text": "The intuition is: if the LOS angle is not changing, the missile is on a collision course and no correction is needed. If the angle is rotating, the target is moving off the collision path and the missile needs to steer harder. The faster you are closing and the faster the angle is changing, the harder you steer."
+    },
+    {
+        "codeSnippet": {
+            "type": "python",
+            "name": "proportional_nav.py - compute()",
+            "data": "class ProportionalNavigation(GuidanceLaw):\n    def __init__(self, nav_gain: float = 4.0):\n        self.nav_gain = nav_gain\n        self._prev_los_angle: float | None = None\n\n    def compute(self, missile_pos: Vec2D, missile_vel: Vec2D,\n                target_pos: Vec2D, target_vel: Vec2D, dt: float) -> Vec2D:\n        rel_pos = target_pos - missile_pos\n        rel_vel = target_vel - missile_vel\n\n        los_angle = math.atan2(rel_pos.y, rel_pos.x)\n\n        if self._prev_los_angle is None:\n            self._prev_los_angle = los_angle\n            return Vec2D(0.0, 0.0)\n\n        # LOS rate: how fast the line-of-sight is rotating\n        d_los = los_angle - self._prev_los_angle\n        d_los = (d_los + math.pi) % (2 * math.pi) - math.pi  # Wrap to [-pi, pi]\n        los_rate = d_los / dt if dt > 1e-9 else 0.0\n\n        self._prev_los_angle = los_angle\n\n        # Closing velocity (negative = closing)\n        range_dist = rel_pos.magnitude()\n        if range_dist < 1e-6:\n            return Vec2D(0.0, 0.0)\n        los_unit = rel_pos / range_dist\n        closing_vel = -rel_vel.dot(los_unit)\n\n        # a_cmd = N * Vc * LOS_rate, perpendicular to LOS\n        accel_mag = self.nav_gain * closing_vel * los_rate\n\n        perp = Vec2D(-math.sin(los_angle), math.cos(los_angle))\n        return perp * accel_mag"
+        }
+    },
+    {
+        "smallLabel": "The Subtle Detail"
+    },
+    {
+        "text": "The angle wrapping on line 18 ((d_los + pi) % (2*pi) - pi) is critical. Without it, when the LOS angle crosses the +/-pi boundary (target passes directly behind the missile), the computed rate spikes to an enormous value and the missile makes a wild correction. The wrapping normalizes the delta to always be the shortest angular path, preventing discontinuities."
+    },
+    {
+        "smallLabel": "How the Guidance Laws Compete"
+    },
+    {
+        "list": [
+            "Proportional Navigation - steers proportional to LOS rate, optimal against constant-velocity targets",
+            "Augmented PN - adds target acceleration compensation, better against maneuvering targets",
+            "Pure Pursuit - always points directly at the target, simple but inefficient (produces curved paths)",
+            "Command - steered externally by the radar, missile has no autonomy"
+        ]
+    },
+    {
+        "text": "Each guidance law implements the same GuidanceLaw interface with a compute() method, making them interchangeable in the simulation. Missiles can switch guidance laws mid-flight during failover - for example, switching from Command (radar-steered) to PN (autonomous) when their radar is destroyed."
+    }
+]

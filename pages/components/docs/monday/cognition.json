@@ -1,0 +1,49 @@
+[
+    {
+        "title": "Monday - Agent Loop"
+    },
+    {
+        "smallLabel": "The Cognition Layer"
+    },
+    {
+        "description": "Monday is an autonomous AI assistant that runs locally on macOS. The agent loop is the central orchestration layer - it chains perception (audio capture), cognition (LLM reasoning), and action (speech synthesis) into a continuous conversation flow that does not require re-triggering the wake word between turns."
+    },
+    {
+        "smallLabel": "The Conversation Loop"
+    },
+    {
+        "text": "Most voice assistants require you to say the wake word before every single interaction. I found this unnatural - real conversations have follow-ups. So Monday listens for a configurable timeout after each response, and if you speak again within that window, it processes the follow-up as part of the same conversation context."
+    },
+    {
+        "codeSnippet": {
+            "type": "python",
+            "name": "agent_loop.py - _process_and_respond()",
+            "data": "def _process_and_respond(self, user_text: str):\n    \"\"\"Full pipeline: user text -> Claude -> TTS -> listen for follow-up -> repeat.\"\"\"\n    try:\n        self._respond_once(user_text)\n\n        followup_timeout = self._config.get(\"conversation\", {}).get(\"followup_timeout\", 8.0)\n        max_turns = self._config.get(\"conversation\", {}).get(\"max_followup_turns\", 20)\n\n        for turn in range(max_turns):\n            if not self._listener or self._stop_event.is_set():\n                break\n\n            log.info(\"Awaiting follow-up...\")\n            if self._indicator:\n                self._indicator.set_state(\"listening\")\n\n            followup = self._listener.capture_followup(timeout=followup_timeout)\n\n            if not followup:\n                log.info(\"No follow-up - ending conversation\")\n                break\n\n            log.info(f\"Follow-up (turn {turn + 2}): {followup}\")\n            self._respond_once(followup)\n\n    except Exception as e:\n        log.error(f\"Response pipeline error: {e}\")\n        if self._indicator:\n            self._indicator.notify(f\"Error: {str(e)[:40]}\", 4000)\n    finally:\n        self._return_to_idle()"
+        }
+    },
+    {
+        "smallLabel": "Dual-Path LLM Cognition"
+    },
+    {
+        "text": "Each turn within the conversation has an intelligent branching decision: when tools are registered (calendar, system controls, etc.), it uses a non-streaming tool-use path that can execute actions. When no tools are available, it streams directly to TTS for lower latency. The system adapts its behavior based on what capabilities are loaded."
+    },
+    {
+        "codeSnippet": {
+            "type": "python",
+            "name": "agent_loop.py - _respond_once()",
+            "data": "def _respond_once(self, user_text: str):\n    \"\"\"Single turn: user text -> Claude (with tools) -> TTS.\"\"\"\n    self._memory.add_user(user_text)\n    messages = self._memory.get_messages()\n    system = self._memory.system_prompt\n\n    if self._indicator:\n        self._indicator.set_state(\"thinking\")\n\n    tools = self._tools.get_anthropic_tools()\n\n    if tools:\n        full_response = self._llm.chat_with_tools(\n            messages=messages,\n            tools=tools,\n            tool_executor=self._tools.execute_tool_call,\n            system=system,\n        )\n        if full_response:\n            if self._indicator:\n                self._indicator.set_state(\"speaking\")\n            self._tts.speak_streamed(\n                iter([full_response]),\n                on_amplitude=self._on_amplitude,\n            )\n            self._memory.add_assistant(full_response)\n    else:\n        text_gen, collector = self._llm.chat_stream_collect(messages, system=system)\n        if self._indicator:\n            self._indicator.set_state(\"speaking\")\n        self._tts.speak_streamed(\n            text_gen,\n            on_amplitude=self._on_amplitude,\n        )\n        full_response = \"\".join(collector)\n        if full_response:\n            self._memory.add_assistant(full_response)"
+        }
+    },
+    {
+        "smallLabel": "Design Decisions"
+    },
+    {
+        "list": [
+            "Conversation continuity without wake word re-triggering - feels natural",
+            "State indicator tracks the current phase (listening, thinking, speaking, idle) for the overlay UI",
+            "Memory accumulates across turns so context is preserved within a conversation",
+            "The collector pattern in the streaming path captures the full response for memory while simultaneously piping chunks to TTS",
+            "Configurable timeout and max turns prevent runaway conversations"
+        ]
+    }
+]

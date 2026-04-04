@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume - Jeryn Vicari</title>
+    <link rel="icon" type="image/x-icon" href="/./j.ico" />
+    <link rel="canonical" href="https://jeryn.me/pages/resume.html">
+
+    <meta name="description"
+        content="Resume of Jeryn Vicari - full-stack developer specializing in Go, Rust, and TypeScript. View or download PDF resume.">
+    <meta name="keywords" content="Jeryn Vicari resume, full-stack developer resume, software engineer CV">
+
+    <meta property="og:title" content="Resume - Jeryn Vicari">
+    <meta property="og:description"
+        content="Full-stack developer resume. Specializing in Go, Rust, and TypeScript.">
+    <meta property="og:url" content="https://jeryn.me/pages/resume.html">
+
+    <link rel="stylesheet" href="../css/root.css" />
+    <link rel="stylesheet" href="../css/resume.css" />
+    <script src="../scripts/mode.js"></script>
+    <script defer src="../scripts/index.js"></script>
+</head>
+
+<body>
+    <header class="header"></header>
+    <main>
+        <h1>Resume</h1>
+        <div class="resume-actions">
+            <a href="/resume.pdf" download class="download-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 3V16M12 16L7 11M12 16L17 11" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Download PDF
+            </a>
+        </div>
+        <div class="pdf-container">
+            <object data="/resume.pdf" type="application/pdf">
+                <div class="pdf-fallback">
+                    <p>PDF preview is not available in this browser.</p>
+                    <a href="/resume.pdf" download class="download-btn">Download Resume PDF</a>
+                </div>
+            </object>
+        </div>
+    </main>
+</body>
+
+</html>

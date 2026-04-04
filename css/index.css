@@ -26,7 +26,7 @@ body {
 }
 
 .hello {
-    font-family: var(--font-title);
+    font-family: var(--font-body);
     display: flex;
     flex-direction: column;
     font-size: 1.5rem;

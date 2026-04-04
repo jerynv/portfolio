@@ -1,0 +1,47 @@
+[
+    {
+        "title": "Monday - Tool System"
+    },
+    {
+        "smallLabel": "Metadata-Driven Plugin Architecture"
+    },
+    {
+        "description": "Monday's tool system lets you register new capabilities (controlling apps, reading files, checking the weather, etc.) by simply defining a Python function with a metadata dictionary. The registry automatically translates those definitions into the Anthropic Claude tool-use format at runtime - tools never need to know about the LLM API."
+    },
+    {
+        "smallLabel": "Why Decouple"
+    },
+    {
+        "text": "I wanted to be able to write a new tool in under a minute - define a function, describe its inputs, and drop it into the tools directory. No boilerplate, no schema files, no registering with the API layer. The registry handles the translation between my simple metadata format and Claude's JSON schema requirement."
+    },
+    {
+        "codeSnippet": {
+            "type": "python",
+            "name": "registry.py - get_anthropic_tools()",
+            "data": "def get_anthropic_tools(self) -> list[dict]:\n    \"\"\"Return tools in Anthropic Claude tool-use format.\"\"\"\n    tools = []\n    for entry in self._tools.values():\n        meta = entry[\"meta\"]\n        properties = {}\n        required = meta.get(\"required\", [])\n        for param, pinfo in meta.get(\"inputs\", {}).items():\n            if isinstance(pinfo, dict):\n                properties[param] = {\n                    \"type\": pinfo.get(\"type\", \"string\"),\n                    \"description\": pinfo.get(\"description\", \"\"),\n                }\n            else:\n                properties[param] = {\"type\": _python_type_to_json(pinfo)}\n            if param not in required:\n                required.append(param)\n\n        tools.append({\n            \"name\": meta[\"name\"],\n            \"description\": meta.get(\"description\", \"\"),\n            \"input_schema\": {\n                \"type\": \"object\",\n                \"properties\": properties,\n                \"required\": required,\n            },\n        })\n    return tools"
+        }
+    },
+    {
+        "smallLabel": "How It Works"
+    },
+    {
+        "text": "Each tool file exports a TOOL_META dictionary and a handler function. The registry scans the tools directory on startup, imports each module, and stores the metadata alongside the handler. When the agent loop needs to make an LLM call, it asks the registry for the full tool list in Anthropic format - the conversion happens here, transparently."
+    },
+    {
+        "text": "The _python_type_to_json helper converts Python type hints (str, int, bool, etc.) to JSON Schema types. This means tool authors can just use native Python types in their metadata instead of learning JSON Schema."
+    },
+    {
+        "smallLabel": "Adding a Tool"
+    },
+    {
+        "text": "A new tool is a single Python file with two exports: a TOOL_META dict describing the name, description, and inputs - and a handler function that receives the parsed arguments from Claude and returns a string result. Drop the file in the tools directory, restart Monday, and the tool is available."
+    },
+    {
+        "list": [
+            "Tools are completely decoupled from the LLM API format",
+            "The registry acts as a translation layer between simple metadata and JSON Schema",
+            "Hot-reloadable - new tools are discovered on startup without code changes",
+            "Type coercion from Python types to JSON Schema types is automatic"
+        ]
+    }
+]

@@ -4,13 +4,13 @@
         "version": "1.2.0"
     },
     {
-        "description": "This document outlines how I would design and implement a secure PollChat-style application in Go, including pseudo-code examples for authentication, OTP handling, rate-limiting, and data protection."
+        "description": "After finding the vulnerabilities documented in the previous page, I outlined how I would design a secure implementation. This covers authentication, OTP handling, rate limiting, and data protection in Go."
     },
     {
         "label": "Public Commitment"
     },
     {
-        "text": "I build privacy-first, resilient software. From day one, my applications minimize collected data, enforce strong authentication, apply rate-limiting, encrypt data in transit and at rest, and include automated abuse detection. All flows default to denying access and protecting user privacy."
+        "text": "My applications minimize collected data, enforce strong authentication, apply rate limiting, encrypt data in transit and at rest, and include automated abuse detection. All flows default to denying access and protecting user privacy."
     },
     {
         "label": "Authentication Flow Example"
