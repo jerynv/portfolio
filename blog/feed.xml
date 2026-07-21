@@ -9,8 +9,8 @@
         <lastBuildDate>Tue, 21 Jul 2026 12:00:00 GMT</lastBuildDate>
         <item>
             <title>A macOS backdoor that reads its C2 off the blockchain</title>
-            <link>https://jeryn.me/blog/dissecting-a-curl-bash-backdoor.html</link>
-            <guid isPermaLink="true">https://jeryn.me/blog/dissecting-a-curl-bash-backdoor.html</guid>
+            <link>https://jeryn.me/blog/dissecting-a-curl-bash-backdoor</link>
+            <guid isPermaLink="true">https://jeryn.me/blog/dissecting-a-curl-bash-backdoor</guid>
             <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
             <description>Someone sent me a terminal command disguised as an installer. This walks through taking it apart one layer at a time, down to a final stage that reads its command-and-control address off the Polygon blockchain instead of hardcoding it.</description>
             <category>security</category>
@@ -20,8 +20,8 @@
         </item>
         <item>
             <title>Why this blog exists</title>
-            <link>https://jeryn.me/blog/why-this-blog-exists.html</link>
-            <guid isPermaLink="true">https://jeryn.me/blog/why-this-blog-exists.html</guid>
+            <link>https://jeryn.me/blog/why-this-blog-exists</link>
+            <guid isPermaLink="true">https://jeryn.me/blog/why-this-blog-exists</guid>
             <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
             <description>I&apos;m starting a public notebook to document what I&apos;m learning and researching - from systems programming and computer science to philosophy. Here&apos;s what to expect.</description>
             <category>meta</category>

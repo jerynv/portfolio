@@ -122,7 +122,10 @@ function loadPosts() {
         if (post.updated && !/^\d{4}-\d{2}-\d{2}$/.test(post.updated))
             fail(`${file}: updated must be YYYY-MM-DD`);
         if (!Array.isArray(post.content)) fail(`${file}: content must be an array of blocks`);
-        posts.push({ ...post, slug, tags: post.tags || [], url: `${SITE}/blog/${slug}.html` });
+        // extensionless, matching the site's own canonical convention (see sitemap.xml) -
+        // the host redirects blog/<slug>.html -> blog/<slug>, so the .html form must never
+        // be the URL we declare as canonical, put in the sitemap, or link to internally
+        posts.push({ ...post, slug, tags: post.tags || [], url: `${SITE}/blog/${slug}` });
     }
     // newest first; ties broken by slug so the order is deterministic
     posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
@@ -266,9 +269,9 @@ function renderPostPage(post, prev, next) {
         : "";
 
     const navLinks = [];
-    if (next) navLinks.push(`<a class="post-nav-link" href="/blog/${next.slug}.html" rel="next"> <-- ${escapeHtml(next.title)}</a>`);
+    if (next) navLinks.push(`<a class="post-nav-link" href="/blog/${next.slug}" rel="next">&larr; ${escapeHtml(next.title)}</a>`);
     navLinks.push(`<a class="post-nav-link" href="/blog/">All posts</a>`);
-    if (prev) navLinks.push(`<a class="post-nav-link" href="/blog/${prev.slug}.html" rel="prev">${escapeHtml(prev.title)} --></a>`);
+    if (prev) navLinks.push(`<a class="post-nav-link" href="/blog/${prev.slug}" rel="prev">${escapeHtml(prev.title)} &rarr;</a>`);
 
     const highlight = hasCode
         ? `\n    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -394,7 +397,7 @@ function renderIndexPage(posts) {
             const tags = p.tags.length
                 ? `<div class="tags">${p.tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
                 : "";
-            listHtml += `                <a class="post-card" href="/blog/${p.slug}.html">
+            listHtml += `                <a class="post-card" href="/blog/${p.slug}">
                     <time class="post-card-date" datetime="${p.date}">${fmtDate(p.date)}</time>
                     <div class="post-card-body">
                         <h3>${escapeHtml(p.title)}</h3>
