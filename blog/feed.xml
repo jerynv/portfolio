@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Jeryn Vicari - Blog</title>
+        <link>https://jeryn.me/blog/</link>
+        <atom:link href="https://jeryn.me/blog/feed.xml" rel="self" type="application/rss+xml" />
+        <description>Notes on what I&apos;m learning and researching - systems programming, computer science, and philosophy.</description>
+        <language>en-us</language>
+        <lastBuildDate>Tue, 21 Jul 2026 12:00:00 GMT</lastBuildDate>
+        <item>
+            <title>A macOS backdoor that reads its C2 off the blockchain</title>
+            <link>https://jeryn.me/blog/dissecting-a-curl-bash-backdoor.html</link>
+            <guid isPermaLink="true">https://jeryn.me/blog/dissecting-a-curl-bash-backdoor.html</guid>
+            <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
+            <description>Someone sent me a terminal command disguised as an installer. This walks through taking it apart one layer at a time, down to a final stage that reads its command-and-control address off the Polygon blockchain instead of hardcoding it.</description>
+            <category>security</category>
+            <category>malware</category>
+            <category>macos</category>
+            <category>reverse-engineering</category>
+        </item>
+        <item>
+            <title>Why this blog exists</title>
+            <link>https://jeryn.me/blog/why-this-blog-exists.html</link>
+            <guid isPermaLink="true">https://jeryn.me/blog/why-this-blog-exists.html</guid>
+            <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
+            <description>I&apos;m starting a public notebook to document what I&apos;m learning and researching - from systems programming and computer science to philosophy. Here&apos;s what to expect.</description>
+            <category>meta</category>
+            <category>learning</category>
+        </item>
+    </channel>
+</rss>

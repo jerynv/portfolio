@@ -40,4 +40,21 @@
 <lastmod>2025-09-22T15:01:02+00:00</lastmod>
 <priority>0.80</priority>
 </url>
+<!-- blog:start (managed by scripts/build-blog.js, do not edit by hand) -->
+<url>
+<loc>https://jeryn.me/blog/</loc>
+<lastmod>2026-07-21T00:00:00+00:00</lastmod>
+<priority>0.90</priority>
+</url>
+<url>
+<loc>https://jeryn.me/blog/dissecting-a-curl-bash-backdoor.html</loc>
+<lastmod>2026-07-21T00:00:00+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://jeryn.me/blog/why-this-blog-exists.html</loc>
+<lastmod>2026-07-21T00:00:00+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<!-- blog:end -->
 </urlset>
